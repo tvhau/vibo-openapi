@@ -1,0 +1,189 @@
+openapi: 3.0.0
+info:
+  title: "Advanced Image Search Documentation"
+  description: "Simple and fast Image Search API.  search images in real-time with advanced filters (size, color, type, region, usage rights). Works similar to Google Advanced Image Search, Bing, Yahoo, Yandex. Keywords: image search, search images, images search API, advanced image search, photo search, find pictures online."
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/advanced-image-search
+paths:
+  /languages:
+    get:
+      summary: "languages"
+      tags:
+        - Languages search
+      parameters:
+        - name: name
+          in: name
+          required: false
+          schema:
+            type: string
+            example: "Afrikaans"
+          description: |
+            - Required: false
+            - Ex: `Afrikaans`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /regions:
+    get:
+      summary: "regions"
+      tags:
+        - Regions search
+      parameters:
+        - name: name
+          in: name
+          required: false
+          schema:
+            type: string
+            example: "Argentina"
+          description: |
+            - Required: false
+            - Ex: `Argentina`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /images/search:
+    get:
+      summary: "images/search"
+      tags:
+        - Images search
+      parameters:
+        - name: regionId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "mountain"
+          description: |
+            - Required: true
+        - name: limit
+          in: limit
+          schema:
+            type: number
+            default: 20
+          description: |
+            -
+        - name: size
+          in: size
+          schema:
+            type: string
+          description: |
+            Select one of the values below:
+            - Default value: No min
+            - Choose one of the values below
+            - `Small`
+            - `Medium`
+            - `Large`
+            - `Wallpaper`
+        - name: color
+          in: color
+          schema:
+            type: string
+          description: |
+            Select one of the values below:
+            - Default value: No min
+            - Choose one of the values below
+            - `color`: Color only
+            - `Monochrome`: Black and white
+            - `Red`
+            - `Orange`
+            - `Yellow`
+            - `Green`
+            - `Blue`
+            - `Purple`
+            - `Pink`
+            - `Brown`
+            - `Black`
+            - `Gray`
+            - `Teal`
+            - `White`
+        - name: time
+          in: time
+          schema:
+            type: string
+          description: |
+            Select one of the values below:
+            - `Day`: Past day
+            - `Weeek`: Past Week
+            - `Month`: Past month
+        - name: type
+          in: query
+          schema:
+            type: string
+          description: |
+            Select one of the values below:
+            - `photo`: Photograph
+            - `clipart`
+            - `gif`: animated GIF
+            - `transparent`
+            - `line`: Line Drawing
+        - name: layout
+          in: layout
+          schema:
+            type: string
+          description: |
+            Select one of the values below:
+            - `Square`
+            - `Tall`
+            - `Wide`
+        - name: licenses
+          in: licenses
+          schema:
+            type: string
+          description: |
+            Select one of the values below:
+            - `Any`: All creative commons
+            - `Public`: Public domain
+            - `Share`: Free to share and use
+            - `ShareCommercially`: Free to share and use commercially
+            - `Modify`: Free to modify, share and use
+            - `ModifyCommercially`: Free to modify, share and use commercially
+        - name: safeSearch
+          in: safeSearch
+          schema:
+            type: string
+            default: 1
+          description: |
+            Select one of the values below:
+            - `1`: Mode rate
+            - `-1`: off
+        - name: region
+          in: region
+          schema:
+            type: string
+            default: "us-en"
+            example: ""
+          description: |
+            - The region can be retrieved from the /regions endpoint at data->code
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Key
+security:
+  - X-API-Key: []
+tags:
+  - name: Property search
+  - name: Property details
+  - name: Property (version 2)
+  - name: Agents
