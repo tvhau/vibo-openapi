@@ -1,26 +1,30 @@
 openapi: 3.0.0
+
 info:
   title: "Advanced Image Search Documentation"
-  description: "Simple and fast Image Search API.  search images in real-time with advanced filters (size, color, type, region, usage rights). Works similar to Google Advanced Image Search, Bing, Yahoo, Yandex. Keywords: image search, search images, images search API, advanced image search, photo search, find pictures online."
+  description: "Simple and fast Image Search API. Search images in real-time with advanced filters (size, color, type, region, usage rights). Works similar to Google Advanced Image Search, Bing, Yahoo, and Yandex. Keywords: image search, search images, images search API, advanced image search, photo search, find pictures online."
   version: 1.0.0
+
 servers:
   - url: http://localhost:8080/advanced-image-search
+
 paths:
+
   /languages:
     get:
-      summary: "languages"
+      summary: "Get languages"
       tags:
         - Languages search
       parameters:
         - name: name
-          in: name
+          in: query
           required: false
           schema:
             type: string
             example: "Afrikaans"
           description: |
-            - Required: false
-            - Ex: `Afrikaans`
+            Optional language name.
+            Example: `Afrikaans`
       responses:
         "200":
           description: Successful Response
@@ -31,19 +35,19 @@ paths:
 
   /regions:
     get:
-      summary: "regions"
+      summary: "Get regions"
       tags:
         - Regions search
       parameters:
         - name: name
-          in: name
+          in: query
           required: false
           schema:
             type: string
             example: "Argentina"
           description: |
-            - Required: false
-            - Ex: `Argentina`
+            Optional region name.
+            Example: `Argentina`
       responses:
         "200":
           description: Successful Response
@@ -54,45 +58,69 @@ paths:
 
   /images/search:
     get:
-      summary: "images/search"
+      summary: "Search images"
       tags:
         - Images search
+
       parameters:
+
         - name: regionId
           in: query
           required: true
           schema:
             type: string
             example: "mountain"
-          description: |
-            - Required: true
+          description: "Search keyword or region identifier."
+
         - name: limit
-          in: limit
+          in: query
+          required: false
           schema:
-            type: number
+            type: integer
             default: 20
-          description: |
-            -
+            minimum: 1
+          description: "Maximum number of images to return."
+
         - name: size
-          in: size
+          in: query
+          required: false
           schema:
             type: string
+            enum:
+              - Small
+              - Medium
+              - Large
+              - Wallpaper
           description: |
-            Select one of the values below:
-            - Default value: No min
-            - Choose one of the values below
+            Select one of the following values:
+            - Default: No minimum size
             - `Small`
             - `Medium`
             - `Large`
             - `Wallpaper`
+
         - name: color
-          in: color
+          in: query
+          required: false
           schema:
             type: string
+            enum:
+              - color
+              - Monochrome
+              - Red
+              - Orange
+              - Yellow
+              - Green
+              - Blue
+              - Purple
+              - Pink
+              - Brown
+              - Black
+              - Gray
+              - Teal
+              - White
           description: |
-            Select one of the values below:
-            - Default value: No min
-            - Choose one of the values below
+            Select one of the following values:
             - `color`: Color only
             - `Monochrome`: Black and white
             - `Red`
@@ -107,64 +135,101 @@ paths:
             - `Gray`
             - `Teal`
             - `White`
+
         - name: time
-          in: time
+          in: query
+          required: false
           schema:
             type: string
+            enum:
+              - Day
+              - Week
+              - Month
           description: |
-            Select one of the values below:
+            Select one of the following values:
             - `Day`: Past day
-            - `Weeek`: Past Week
+            - `Week`: Past week
             - `Month`: Past month
+
         - name: type
           in: query
+          required: false
           schema:
             type: string
+            enum:
+              - photo
+              - clipart
+              - gif
+              - transparent
+              - line
           description: |
-            Select one of the values below:
+            Select one of the following values:
             - `photo`: Photograph
             - `clipart`
-            - `gif`: animated GIF
+            - `gif`: Animated GIF
             - `transparent`
-            - `line`: Line Drawing
+            - `line`: Line drawing
+
         - name: layout
-          in: layout
+          in: query
+          required: false
           schema:
             type: string
+            enum:
+              - Square
+              - Tall
+              - Wide
           description: |
-            Select one of the values below:
+            Select one of the following values:
             - `Square`
             - `Tall`
             - `Wide`
+
         - name: licenses
-          in: licenses
+          in: query
+          required: false
           schema:
             type: string
+            enum:
+              - Any
+              - Public
+              - Share
+              - ShareCommercially
+              - Modify
+              - ModifyCommercially
           description: |
-            Select one of the values below:
+            Select one of the following values:
             - `Any`: All creative commons
             - `Public`: Public domain
             - `Share`: Free to share and use
             - `ShareCommercially`: Free to share and use commercially
             - `Modify`: Free to modify, share and use
             - `ModifyCommercially`: Free to modify, share and use commercially
+
         - name: safeSearch
-          in: safeSearch
+          in: query
+          required: false
           schema:
-            type: string
+            type: integer
+            enum:
+              - 1
+              - -1
             default: 1
           description: |
-            Select one of the values below:
-            - `1`: Mode rate
-            - `-1`: off
+            Safe search mode:
+            - `1`: Enabled
+            - `-1`: Disabled
+
         - name: region
-          in: region
+          in: query
+          required: false
           schema:
             type: string
             default: "us-en"
-            example: ""
+            example: "us-en"
           description: |
-            - The region can be retrieved from the /regions endpoint at data->code
+            Region code retrieved from the `/regions` endpoint using `data.code`.
+
       responses:
         "200":
           description: Successful Response
@@ -180,10 +245,14 @@ components:
       in: header
       name: x-api-key
       description: API Key
+
 security:
   - X-API-Key: []
+
 tags:
-  - name: Property search
-  - name: Property details
-  - name: Property (version 2)
-  - name: Agents
+  - name: Languages search
+    description: Language-related operations
+  - name: Regions search
+    description: Region-related operations
+  - name: Images search
+    description: Image search operations
