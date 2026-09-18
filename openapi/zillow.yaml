@@ -1,0 +1,2735 @@
+openapi: 3.0.0
+info:
+  title: "Zillow API Documentation"
+  description: "Real-time data, unofficial zillow.com API, realty in US, search for-sale and rental listings. unofficial API real-time data from zillow.com API provide information on buying, selling, renting such as homes, apartments, and condos."
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/zillow
+paths:
+  /properties/auto-complete:
+    get:
+      summary: "properties/auto-complete"
+      tags:
+        - Property search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston"
+          description: |
+            - Required: true
+            - Ex: `Houston`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/auto-complete-v2:
+    get:
+      summary: "properties/auto-complete-v2"
+      tags:
+        - Property search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston"
+          description: |
+            - Required: true
+            - Ex: `Houston`
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 25
+            default: 10
+          description: |
+            - Total number of record per api call
+            - Ex: `25`
+            - Default: `10`
+        - name: searchContext
+          in: query
+          schema:
+            type: string
+            enum: [FOR_SALE, FOR_RENT, SOLD]
+            default: "FOR_SALE"
+          description: |
+            - Search context
+            - Choose one of the values below
+            - Default: `FOR_SALE`
+            - `FOR_SALE`
+            - `FOR_RENT`
+            - `SOLD`
+        - name: resultType
+          in: query
+          schema:
+            type: string
+          description: |
+            - Result type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `ADDRESSES,FORSALE`
+            - `ADDRESSES`
+            - `FORSALE`
+            - `RENTALS`
+            - `SOLD`
+            - `REGIONS`
+            - `SEMANTIC_REGIONS`
+            - `SCHOOLS`
+            - `SCHOOL_DISTRICTS`
+            - `AFFORDABILITY`
+            - `COMMERCIAL_NAME`
+            - `COMMERCIAL_ADDRESS`
+            - `COMMUNITIES`
+            - `BUILDER_COMMUNITIES`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /properties/auto-complete-v3:
+    get:
+      summary: "properties/auto-complete-v3"
+      tags:
+        - Property search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston"
+          description: |
+            - Required: true
+            - Ex: `Houston`
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 25
+            default: 10
+          description: |
+            - Total number of record per api call
+            - Ex: `25`
+            - Default: `10`
+        - name: searchContext
+          in: query
+          schema:
+            type: string
+            enum: [FOR_SALE, FOR_RENT, SOLD]
+            default: "FOR_SALE"
+          description: |
+            - Search context
+            - Choose one of the values below
+            - Default: `FOR_SALE`
+            - `FOR_SALE`
+            - `FOR_RENT`
+            - `SOLD`
+        - name: resultType
+          in: query
+          schema:
+            type: string
+          description: |
+            - Result type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `ADDRESSES,FORSALE`
+            - `ADDRESSES`
+            - `FORSALE`
+            - `RENTALS`
+            - `SOLD`
+            - `REGIONS`
+            - `SEMANTIC_REGIONS`
+            - `SCHOOLS`
+            - `SCHOOL_DISTRICTS`
+            - `AFFORDABILITY`
+            - `COMMERCIAL_NAME`
+            - `COMMERCIAL_ADDRESS`
+            - `COMMUNITIES`
+            - `BUILDER_COMMUNITIES`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /properties/search:
+    get:
+      summary: "properties/search"
+      tags:
+        - Property search
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston, TX"
+          description: |
+            - Required: true
+            - The `location` can be retrieved from /properties/auto-complete endpoint(data->display)
+            - Ex: `Houston, TX`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 25
+          description: |
+            - Total number of record per api call
+            - Ex: `2`
+            - Default: `25`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 1
+          description: |
+            - The page index, for paging purpose
+             - Ex: `2`
+             - Default: `1`
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [forSale, forRent, sold]
+            default: "forSale"
+          description: |
+            - Status type of the properties
+            - Default : `forSale`
+            - Choose one of the values below
+            - `forSale`: For sale
+            - `forRent`: For rent
+            - `sold`: Sold
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              [
+                relevance,
+                recentlyChanged,
+                daysOn,
+                price,
+                beds,
+                baths,
+                livingArea,
+                lotArea,
+                yearBuilt,
+                rentalPriorityScore,
+              ]
+            default: "relevance"
+          description: |
+            - Sort by
+            - Default : `relevance`
+            - Choose one of the values below
+            - `relevance`: Homes for You (with sortType=desc)
+            - `recentlyChanged`: Recently Changed (with sortType=desc)
+            - `daysOn`: Newest (with sortType=asc)
+            - `price`: Price: High to Low (with sortType=desc)
+            - `price`: Price: Low to High (with sortType=asc)
+            - `beds`: Bedrooms (with sortType=desc)
+            - `baths`: Bathrooms (with sortType=desc)
+            - `livingArea`: Square Feet (with sortType=desc)
+            - `lotArea`: Lot Size (with sortType=desc)
+            - `yearBuilt`: Year Built (with sortType=desc)
+            - `rentalPriorityScore`: Default in case status=forRent (with sortType=desc)
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+          description: |
+            - Order type
+            - Default : `desc`
+            - Choose one of the values below
+            - `asc`: Ascending (smallest value first)
+            - `desc`: Descending (largest value first)
+        - name: priceRange
+          in: query
+          schema:
+            type: string
+            example: "160000,1500000"
+          description: |
+            - Price range
+            - Min and max prices should be separated by commas
+            - Ex: `160000,1500000`
+            - In the case of only having the minimum price: Ex: `160000`
+            - In the case of only having the maximum price: Ex: `,1500000`
+            - In case of having both: Ex: `160000,1500000`
+        - name: priceType
+          in: query
+          schema:
+            type: string
+            enum: [listPrice, monthlyPayment]
+            default: "listPrice"
+          description: |
+            - Price type
+            - Default : `listPrice`
+            - Choose one of the values below
+            - `listPrice`: List price
+            - `monthlyPayment`: Monthly payment
+        - name: hoaFees
+          in: query
+          schema:
+            type: number
+            example: 200
+          description: |
+            - Hoa fees
+            - Default : Any
+            - Choose one of the values below
+            - `0`: No HOA Fee
+            - `100`: 100/month
+            - `200`: 200/month
+            - ................
+            - `2000`: 2000/month
+        - name: includeNoHoaDataHomes
+          in: query
+          schema:
+            type: boolean
+          description: |
+            - Include homes with no Hoa data
+            - The includeNoHoaDataHomes only takes effect when `hoaFees` is selected.
+            - Default : `true`
+        - name: bedrooms
+          in: query
+          schema:
+            type: string
+            example: "0,5"
+          description: |
+            - Bedrooms
+            - Default : Any
+            - Min and max bedrooms should be separated by commas
+            - Ex: `0,5`
+            - In the case of only having the minimum bedrooms: Ex: `0`
+            - In the case of only having the maximum bedrooms: Ex: `,5`
+            - In case of having both: Ex: `0,5`
+            - `0`: Studio
+            - `1`: 1
+            - ......
+            - `5`: 5
+        - name: bathrooms
+          in: query
+          schema:
+            type: string
+            example: "1"
+          description: |
+            - Bathrooms
+            - Default : Any
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "townhome,singleFamily"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `townhome,singleFamily`
+            - `singleFamily`: Houses
+            - `townhome`: Townhomes
+            - `condo,apartment`: Condos/Co-ops/Apartments
+            - `land`: Lots/Land
+            - `multiFamily`: Multi-family
+            - `manufactured`: Manufactured
+        - name: homeSize
+          in: query
+          schema:
+            type: string
+            example: "500,7500"
+          description: |
+            - Home size
+            - Default : Any
+            - Min and max home size should be separated by commas
+            - Ex: `500,7500`
+            - In the case of only having the minimum home size: Ex: `500`
+            - In the case of only having the maximum home size: Ex: `,7500`
+            - In case of having both: Ex: `500,7500`
+            - `500`: 500 sqft
+            - `750`: 750 sqft
+            - ......
+            - `7500`: 7500 sqft
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "1000,3000"
+          description: |
+            - Lot size
+            - Default : Any
+            - Min and max lot size should be separated by commas
+            - Ex: `1000,3000`
+            - In the case of only having the minimum lot size: Ex: `1000`
+            - In the case of only having the maximum lot size: Ex: `,3000`
+            - In case of having both: Ex: `1000,3000`
+            - `1000`: 1000 sqft
+            - `2000`: 2000 sqft
+            - ................
+            - `10890`: 1/4 acres
+            - `21780`: 1/2 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+            - `4356000`:100 acres
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2024"
+          description: |
+            - Year built
+            - Default : Any
+            - Min and max year built should be separated by commas
+            - Ex: `2008,2020`
+            - In the case of only having the minimum year built: Ex: `2008`
+            - In the case of only having the maximum year built: Ex: `,2020`
+            - In case of having both: Ex: `2008,2020`
+            - `2024`: 2024
+            - `2023`: 2023
+            - ............
+            - `1900`: 1900
+        - name: amenities
+          in: query
+          schema:
+            type: string
+            example: "haveAirConditioning,havePool"
+          description: |
+            - Amenities
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `haveAirConditioning,havePool`
+            - `haveAirConditioning`: Air conditioning (A/C)
+            - `havePool`: pool
+            - `onWaterfront`: On waterfront
+        - name: parkingSpots
+          in: query
+          schema:
+            type: number
+            example: "2"
+          description: |
+            - Parking spots
+            - Default : Any
+            - Ex: `3`
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: haveGarage
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Garage
+            - Default : `false`
+            - Ex: `true`
+        - name: haveSingleStory
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Single-story
+            - Default : `false`
+            - Ex: `true`
+        - name: basementTypes
+          in: query
+          schema:
+            type: string
+            example: "finished,unfinished,partial"
+          description: |
+            - Basement types
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `finished,unfinished,partial`
+            - `finished,unfinished,partial`: Finished and Unfinished
+            - `finished`: Finished
+            - `unfinished`: Unfinished
+        - name: keywords
+          in: query
+          schema:
+            type: string
+            example: "fireplace,horses"
+          description: |
+            - Keyword search: Backyard, fireplace, horses, MLS #, etc.
+            - Ex: `fireplace,horses`
+        - name: listing
+          in: query
+          schema:
+            type: string
+            example: "fsba,newConstruction"
+          description: |
+            - Listing
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `fsba,newConstruction`
+            - `fsba`: Agent listed
+            - `newConstruction`: New construction
+            - `foreclosure`: Foreclosure
+            - `auction`: Auctions
+            - `foreclosed`: Foreclosed
+            - `preforeclosure`: Pre-foreclosures
+            - `fsbo`: Owner posted
+        - name: listingType
+          in: query
+          schema:
+            type: string
+            enum: [agent, other]
+            default: "agent"
+          description: |
+            - Listing type
+            - Default : `agent`
+            - Choose one of the values below
+            - `agent`: By agent
+            - `other`: By other
+        - name: listingStatus
+          in: query
+          schema:
+            type: string
+            example: "comingSoon,priceReduction"
+          description: |
+            - Listing status
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `comingSoon,priceReduction`
+            - `comingSoon`: Coming soon
+            - `priceReduction`: Price drop
+            - `acceptingBackupOffers`: Accepting backup offers
+            - `pending`: Pending & under contract
+        - name: touring
+          in: query
+          schema:
+            type: string
+            example: "openHouses,approvedVirtualTour"
+          description: |
+            - Touring
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `openHouses,approvedVirtualTour`
+            - `openHouses`:Open house
+            - `approvedVirtualTour`: 3D tour
+        - name: timeOnZillow
+          in: query
+          schema:
+            type: number
+            example: "90"
+          description: |
+            - Time on Zillow
+            - It is `sold in last` item in case status=sold
+            - Ex: `1`
+            - `1`: 1 day
+            - `7`: 1 week
+            - `14`: 2 weeks
+            - `30`: 1 month
+            - `90`: 3 months
+            - `182`: 6 months
+            - `365`: 12 months
+            - `730`: 24 months
+            - `1095`: 36 months
+        - name: views
+          in: query
+          schema:
+            type: string
+            example: "city,mountain"
+          description: |
+            - Surrounding views (status=forSale)
+            - Views (status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `city,mountain`
+            - `city`: City
+            - `mountain`: Mountain
+            - `park`: Park
+            - `water`: Water
+        - name: seniorLiving
+          in: query
+          schema:
+            type: string
+            example: "seniorCommunity"
+          description: |
+            - Senior living
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `seniorCommunity`
+            - `seniorCommunity`: Hide 55+ communities
+        - name: space
+          in: query
+          schema:
+            type: string
+            example: "room"
+          description: |
+            - Space
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `room`
+            - `room`: Room
+        - name: rentalAvailabilityDate
+          in: query
+          schema:
+            type: string
+            example: "2024-03-16"
+          description: |
+            - Move-in date (only using in case status=forRent)
+            - Choose a move-in date to view listings available on or before this date
+            - Format: `YYYY-MM-DD`
+            - Ex: `2024-03-16`
+        - name: excludeNullRentalAvailabilityDates
+          in: query
+          schema:
+            type: boolean
+            example: true
+            default: false
+          description: |
+            - Hide listings with no date provided (only using in case status=forRent and the `rentalAvailabilityDate` is inputed)
+            - Ex: `true`
+            - Default : `false`
+        - name: rentalAmenities
+          in: query
+          schema:
+            type: string
+            default: "largeDogs,smallDogs"
+          description: |
+            - Rental amenities(only using in case status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `largeDogs,smallDogs`
+            - `largeDogs`: Allows large dogs
+            - `smallDogs`: Allows small dogs
+            - `cats`: Allows cats
+            - `parkingAvailable`: On-site parking
+            - `laundryAvailable`: In-unit laundry
+            - `incomeRestricted`: Income restricted
+            - `isFeaturedListing`: Apartment community
+            - `areApplicationsAccepted`: Accepts Zillow Applications
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-url:
+    get:
+      summary: "properties/search-url"
+      tags:
+        - Property search
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.zillow.com/newton-ks/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22north%22%3A38.46391866296362%2C%22south%22%3A37.76594471791235%2C%22east%22%3A-96.58565674902346%2C%22west%22%3A-97.89989625097658%7D%2C%22usersSearchTerm%22%3A%22Newton%2C%20KS%22%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%2C%22regionSelection%22%3A%5B%7B%22regionId%22%3A19619%2C%22regionType%22%3A6%7D%5D%2C%22pagination%22%3A%7B%7D%7D"
+          description: |
+            - Required: true
+            - The URL to get properties
+            - `url` can be copied from the browser
+            - Ex:
+            `https://www.zillow.com/newton-ks/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22north%22%3A38.46391866296362%2C%22south%22%3A37.76594471791235%2C%22east%22%3A-96.58565674902346%2C%22west%22%3A-97.89989625097658%7D%2C%22usersSearchTerm%22%3A%22Newton%2C%20KS%22%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%2C%22regionSelection%22%3A%5B%7B%22regionId%22%3A19619%2C%22regionType%22%3A6%7D%5D%2C%22pagination%22%3A%7B%7D%7D`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `1`
+            - Default: `Depends on the url`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-coordinates:
+    get:
+      summary: "properties/search-coordinates"
+      tags:
+        - Property search
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston, TX"
+          description: |
+            - Required: true
+            - The `location` can be retrieved from /properties/auto-complete endpoint(data->display)
+            - Ex: `Houston, TX`
+        - name: eastLng
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "-94.517205"
+          description: |
+            - East longitude
+            - Required: true
+            - Ex: `-94.517205`
+        - name: westLng
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "-96.193233"
+          description: |
+            - West longitude
+            - Required: true
+            - Ex: `-96.193233`
+        - name: southLat
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "29.170258"
+          description: |
+            - South latitude
+            - Required: true
+            - Ex: `29.170258`
+        - name: northLat
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "29.657524"
+          description: |
+            - North latitude
+            - Required: true
+            - Ex: `29.657524`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 25
+          description: |
+            - Total number of record per api call
+            - Ex: `2`
+            - Default: `25`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 1
+          description: |
+            - The page index, for paging purpose
+             - Ex: `2`
+             - Default: `1`
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [forSale, forRent, sold]
+            default: "forSale"
+          description: |
+            - Status type of the properties
+            - Default : `forSale`
+            - Choose one of the values below
+            - `forSale`: For sale
+            - `forRent`: For rent
+            - `sold`: Sold
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              [
+                relevance,
+                recentlyChanged,
+                daysOn,
+                price,
+                beds,
+                baths,
+                livingArea,
+                lotArea,
+                yearBuilt,
+                rentalPriorityScore,
+              ]
+            default: "relevance"
+          description: |
+            - Sort by
+            - Default : `relevance`
+            - Choose one of the values below
+            - `relevance`: Homes for You (with sortType=desc)
+            - `recentlyChanged`: Recently Changed (with sortType=desc)
+            - `daysOn`: Newest (with sortType=asc)
+            - `price`: Price: High to Low (with sortType=desc)
+            - `price`: Price: Low to High (with sortType=asc)
+            - `beds`: Bedrooms (with sortType=desc)
+            - `baths`: Bathrooms (with sortType=desc)
+            - `livingArea`: Square Feet (with sortType=desc)
+            - `lotArea`: Lot Size (with sortType=desc)
+            - `yearBuilt`: Year Built (with sortType=desc)
+            - `rentalPriorityScore`: Default in case status=forRent (with sortType=desc)
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+          description: |
+            - Order type
+            - Default : `desc`
+            - Choose one of the values below
+            - `asc`: Ascending (smallest value first)
+            - `desc`: Descending (largest value first)
+        - name: priceRange
+          in: query
+          schema:
+            type: string
+            example: "160000,1500000"
+          description: |
+            - Price range
+            - Min and max prices should be separated by commas
+            - Ex: `160000,1500000`
+            - In the case of only having the minimum price: Ex: `160000`
+            - In the case of only having the maximum price: Ex: `,1500000`
+            - In case of having both: Ex: `160000,1500000`
+        - name: priceType
+          in: query
+          schema:
+            type: string
+            enum: [listPrice, monthlyPayment]
+            default: "listPrice"
+          description: |
+            - Price type
+            - Default : `listPrice`
+            - Choose one of the values below
+            - `listPrice`: List price
+            - `monthlyPayment`: Monthly payment
+        - name: hoaFees
+          in: query
+          schema:
+            type: number
+            example: 200
+          description: |
+            - Hoa fees
+            - Default : Any
+            - Choose one of the values below
+            - `0`: No HOA Fee
+            - `100`: 100/month
+            - `200`: 200/month
+            - ................
+            - `2000`: 2000/month
+        - name: includeNoHoaDataHomes
+          in: query
+          schema:
+            type: boolean
+          description: |
+            - Include homes with no Hoa data
+            - The includeNoHoaDataHomes only takes effect when `hoaFees` is selected.
+            - Default : `true`
+        - name: bedrooms
+          in: query
+          schema:
+            type: string
+            example: "0,5"
+          description: |
+            - Bedrooms
+            - Default : Any
+            - Min and max bedrooms should be separated by commas
+            - Ex: `0,5`
+            - In the case of only having the minimum bedrooms: Ex: `0`
+            - In the case of only having the maximum bedrooms: Ex: `,5`
+            - In case of having both: Ex: `0,5`
+            - `0`: Studio
+            - `1`: 1
+            - ......
+            - `5`: 5
+        - name: bathrooms
+          in: query
+          schema:
+            type: string
+            example: "1"
+          description: |
+            - Bathrooms
+            - Default : Any
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "townhome,singleFamily"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `townhome,singleFamily`
+            - `singleFamily`: Houses
+            - `townhome`: Townhomes
+            - `condo,apartment`: Condos/Co-ops/Apartments
+            - `land`: Lots/Land
+            - `multiFamily`: Multi-family
+            - `manufactured`: Manufactured
+        - name: homeSize
+          in: query
+          schema:
+            type: string
+            example: "500,7500"
+          description: |
+            - Home size
+            - Default : Any
+            - Min and max home size should be separated by commas
+            - Ex: `500,7500`
+            - In the case of only having the minimum home size: Ex: `500`
+            - In the case of only having the maximum home size: Ex: `,7500`
+            - In case of having both: Ex: `500,7500`
+            - `500`: 500 sqft
+            - `750`: 750 sqft
+            - ......
+            - `7500`: 7500 sqft
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "1000,3000"
+          description: |
+            - Lot size
+            - Default : Any
+            - Min and max lot size should be separated by commas
+            - Ex: `1000,3000`
+            - In the case of only having the minimum lot size: Ex: `1000`
+            - In the case of only having the maximum lot size: Ex: `,3000`
+            - In case of having both: Ex: `1000,3000`
+            - `1000`: 1000 sqft
+            - `2000`: 2000 sqft
+            - ................
+            - `10890`: 1/4 acres
+            - `21780`: 1/2 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+            - `4356000`:100 acres
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2024"
+          description: |
+            - Year built
+            - Default : Any
+            - Min and max year built should be separated by commas
+            - Ex: `2008,2020`
+            - In the case of only having the minimum year built: Ex: `2008`
+            - In the case of only having the maximum year built: Ex: `,2020`
+            - In case of having both: Ex: `2008,2020`
+            - `2024`: 2024
+            - `2023`: 2023
+            - ............
+            - `1900`: 1900
+        - name: amenities
+          in: query
+          schema:
+            type: string
+            example: "haveAirConditioning,havePool"
+          description: |
+            - Amenities
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `haveAirConditioning,havePool`
+            - `haveAirConditioning`: Air conditioning (A/C)
+            - `havePool`: pool
+            - `onWaterfront`: On waterfront
+        - name: parkingSpots
+          in: query
+          schema:
+            type: number
+            example: "2"
+          description: |
+            - Parking spots
+            - Default : Any
+            - Ex: `3`
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: haveGarage
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Garage
+            - Default : `false`
+            - Ex: `true`
+        - name: haveSingleStory
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Single-story
+            - Default : `false`
+            - Ex: `true`
+        - name: basementTypes
+          in: query
+          schema:
+            type: string
+            example: "finished,unfinished,partial"
+          description: |
+            - Basement types
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `finished,unfinished,partial`
+            - `finished,unfinished,partial`: Finished and Unfinished
+            - `finished`: Finished
+            - `unfinished`: Unfinished
+        - name: keywords
+          in: query
+          schema:
+            type: string
+            example: "fireplace,horses"
+          description: |
+            - Keyword search: Backyard, fireplace, horses, MLS #, etc.
+            - Ex: `fireplace,horses`
+        - name: listing
+          in: query
+          schema:
+            type: string
+            example: "fsba,newConstruction"
+          description: |
+            - Listing
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `fsba,newConstruction`
+            - `fsba`: Agent listed
+            - `newConstruction`: New construction
+            - `foreclosure`: Foreclosure
+            - `auction`: Auctions
+            - `foreclosed`: Foreclosed
+            - `preforeclosure`: Pre-foreclosures
+            - `fsbo`: Owner posted
+        - name: listingType
+          in: query
+          schema:
+            type: string
+            enum: [agent, other]
+            default: "agent"
+          description: |
+            - Listing type
+            - Default : `agent`
+            - Choose one of the values below
+            - `agent`: By agent
+            - `other`: By other
+        - name: listingStatus
+          in: query
+          schema:
+            type: string
+            example: "comingSoon,priceReduction"
+          description: |
+            - Listing status
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `comingSoon,priceReduction`
+            - `comingSoon`: Coming soon
+            - `priceReduction`: Price drop
+            - `acceptingBackupOffers`: Accepting backup offers
+            - `pending`: Pending & under contract
+        - name: touring
+          in: query
+          schema:
+            type: string
+            example: "openHouses,approvedVirtualTour"
+          description: |
+            - Touring
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `openHouses,approvedVirtualTour`
+            - `openHouses`:Open house
+            - `approvedVirtualTour`: 3D tour
+        - name: timeOnZillow
+          in: query
+          schema:
+            type: number
+            example: "90"
+          description: |
+            - Time on Zillow
+            - It is `sold in last` item in case status=sold
+            - Ex: `1`
+            - `1`: 1 day
+            - `7`: 1 week
+            - `14`: 2 weeks
+            - `30`: 1 month
+            - `90`: 3 months
+            - `182`: 6 months
+            - `365`: 12 months
+            - `730`: 24 months
+            - `1095`: 36 months
+        - name: views
+          in: query
+          schema:
+            type: string
+            example: "city,mountain"
+          description: |
+            - Surrounding views (status=forSale)
+            - Views (status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `city,mountain`
+            - `city`: City
+            - `mountain`: Mountain
+            - `park`: Park
+            - `water`: Water
+        - name: seniorLiving
+          in: query
+          schema:
+            type: string
+            example: "seniorCommunity"
+          description: |
+            - Senior living
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `seniorCommunity`
+            - `seniorCommunity`: Hide 55+ communities
+        - name: space
+          in: query
+          schema:
+            type: string
+            example: "room"
+          description: |
+            - Space
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `room`
+            - `room`: Room
+        - name: rentalAvailabilityDate
+          in: query
+          schema:
+            type: string
+            example: "2024-03-16"
+          description: |
+            - Move-in date (only using in case status=forRent)
+            - Choose a move-in date to view listings available on or before this date
+            - Format: `YYYY-MM-DD`
+            - Ex: `2024-03-16`
+        - name: excludeNullRentalAvailabilityDates
+          in: query
+          schema:
+            type: boolean
+            example: true
+            default: false
+          description: |
+            - Hide listings with no date provided (only using in case status=forRent and the `rentalAvailabilityDate` is inputed)
+            - Ex: `true`
+            - Default : `false`
+        - name: rentalAmenities
+          in: query
+          schema:
+            type: string
+            default: "largeDogs,smallDogs"
+          description: |
+            - Rental amenities(only using in case status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `largeDogs,smallDogs`
+            - `largeDogs`: Allows large dogs
+            - `smallDogs`: Allows small dogs
+            - `cats`: Allows cats
+            - `parkingAvailable`: On-site parking
+            - `laundryAvailable`: In-unit laundry
+            - `incomeRestricted`: Income restricted
+            - `isFeaturedListing`: Apartment community
+            - `areApplicationsAccepted`: Accepts Zillow Applications
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-address:
+    get:
+      summary: "properties/search-address"
+      tags:
+        - Property search
+      parameters:
+        - name: address
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "104 Meir Ln College Station, TX 77845"
+          description: |
+            - Required: true
+            - The `address` can be retrieved from /properties/auto-complete endpoint(data->display with resultType=Address)
+            - Ex: `104 Meir Ln College Station, TX 77845`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/details:
+    get:
+      summary: "properties/details"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/details-url:
+    get:
+      summary: "properties/details-url"
+      tags:
+        - Property details
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.zillow.com/homedetails/40-Mill-Creek-Rd-Cambridge-ON-N1R-1J6/2061083056_zpid/"
+          description: |
+            - Required: true
+            - The URL to get the detailed property
+            - `url` can be copied from the browser
+            - Ex: `https://www.zillow.com/homedetails/40-Mill-Creek-Rd-Cambridge-ON-N1R-1J6/2061083056_zpid/`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/walk-transit-bike-score:
+    get:
+      summary: "properties/walk-transit-bike-score"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/others:
+    get:
+      summary: "properties/others"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /properties/others-v2:
+    get:
+      summary: "properties/others (Nearby schools, photos, nearby homes.... )"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /properties/get-available-times:
+    get:
+      summary: "properties/get-available-times"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/local-legal-protection:
+    get:
+      summary: "properties/local-legal-protection"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/down-payment-assistance:
+    get:
+      summary: "properties/down-payment-assistance"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/list-commutes:
+    get:
+      summary: "properties/list-commutes"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/similar-homes:
+    get:
+      summary: "properties/similar-homes"
+      tags:
+        - Similar homes
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/zestimate-history:
+    get:
+      summary: "properties/zestimate-history"
+      tags:
+        - Stats and History
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "89335134"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `89335134`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/price-tax-history:
+    get:
+      summary: "properties/price-tax-history"
+      tags:
+        - Stats and History
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "89335134"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `89335134`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /agents/search:
+    get:
+      summary: "agents/search"
+      tags:
+        - Agents
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston, TX"
+          description: |
+            - Required: true
+            - `location` can be retrieved from /properties/auto-complete endpoint(data->display)
+            - Ex: `Houston, TX`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: name
+          in: query
+          schema:
+            type: string
+            example: "Louis Adler"
+          description: |
+            - Agent name
+            - Ex: `Louis Adler`
+        - name: specialty
+          in: query
+          schema:
+            type: string
+            enum:
+              [
+                Any,
+                BuyersAgent,
+                ListingAgent,
+                Relocation,
+                Foreclosure,
+                ShortSale,
+                Consulting,
+                Other,
+              ]
+            default: "Any"
+          description: |
+            - Specialties
+            - Default : `Any`
+            - Choose one of the values below
+            - `Any`: Any
+            - `BuyersAgent`: Buyer's Agent
+            - `ListingAgent`: Listing Agent
+            - `Relocation`: Relocation
+            - `Foreclosure`: Foreclosure
+            - `ShortSale`: Short-Sale
+            - `Consulting`: Consulting
+            - `Other`: Other
+        - name: language
+          in: query
+          schema:
+            type: string
+            default: "English"
+          description: |
+            - Languages
+            - Default : `English`
+            - Choose one of the values below
+            - `English`: English
+            - `Arabic`: Arabic
+            - `Bengali`: Bengali
+            - `Cantonese`: Cantonese
+            - `Farsi`: Farsi
+            - `French`: French
+            - `German`: German
+            - `Greek`: Greek
+            - `Hebrew`: Hebrew
+            - `Hindi`: Hindi
+            - `Hungarian`: Hungarian
+            - `Italian`: Italian
+            - `Japanese`: Japanese
+            - `Korean`: Korean
+            - `Mandarin`: Mandarin
+            - `Polish`: Polish
+            - `Portuguese`: Portuguese
+            - `Russian`: Russian
+            - `Spanish`: Spanish
+            - `Tagalog (Filipino)`: Tagalog (Filipino)
+            - `Thai`: Thai
+            - `Turkish`: Turkish
+            - `Vietnamese`: Vietnamese
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /agents/details:
+    get:
+      summary: "agents/details"
+      tags:
+        - Agents
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "JamesKrueger"
+          description: |
+            - Required: true
+            - `username` can be retrieved from /agents/search endpoint(data->featuredAgents->id OR data->results->professionals->id)
+            - Ex: `JamesKrueger`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /agents/reviews:
+    get:
+      summary: "agents/reviews"
+      tags:
+        - Agents
+      parameters:
+        - name: encodedZuid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "X1-ZUz3fc6ch3xp8p_10irz"
+          description: |
+            - Required: true
+            - The `encodedZuid` can be retrieved from /agents/details endpoint(data->displayUser->encodedZuid)
+            - Ex: `X1-ZUz3fc6ch3xp8p_10irz`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: |
+            - Total number of record per api call
+            - Ex: `20`
+            - It has a value ranging from 0 to 100
+            - Default value: `5`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [newest, rating_high, rating_low]
+            default: "newest"
+          description: |
+            - Sort by
+            - Default: `newest`
+            - Ex: `newest`
+            - Choose one of the values below
+            - `newest`: Newest first
+            - `rating_high`: Rating (high to low)
+            - `rating_low`: Rating (low to high)
+        - name: serviceTypeIds
+          in: query
+          schema:
+            type: string
+            example: "9,10,11,12"
+          description: |
+            - Filter by
+            - Default: All reviews
+            - Ex: `9,10,11,12`
+            - The `serviceTypeIds` can be retrieved from response of this endpoint(data->filters->serviceTypeIds)
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /agents/sale-listings:
+    get:
+      summary: "agents/sale-listings"
+      tags:
+        - Agents
+      parameters:
+        - name: encodedZuid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "X1-ZU10bs62tnoyy2x_5dugv"
+          description: |
+            - Required: true
+            - `encodedZuid` can be retrieved from /agents/details endpoint(data->displayUser->encodedZuid)
+            - Ex: `X1-ZUz3fc6ch3xp8p_10irz`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: |
+            - Total number of record per api call
+            - Ex: `20`
+            - It has a value ranging from 0 to 100
+            - Default value: `5`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /agents/rent-listings:
+    get:
+      summary: "agents/rent-listings"
+      tags:
+        - Agents
+      parameters:
+        - name: encodedZuid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "X1-ZU10bs62tnoyy2x_5dugv"
+          description: |
+            - Required: true
+            - The `encodedZuid` can be retrieved from /agents/details endpoint(data->displayUser->encodedZuid)
+            - Ex: `X1-ZUz3fc6ch3xp8p_10irz`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: |
+            - Total number of record per api call
+            - Ex: `20`
+            - It has a value ranging from 0 to 100
+            - Default value: `5`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /gents/sold-listings:
+    get:
+      summary: "gents/sold-listings"
+      tags:
+        - Agents
+      parameters:
+        - name: encodedZuid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "X1-ZU10bs62tnoyy2x_5dugv"
+          description: |
+            - Required: true
+            - The `encodedZuid` can be retrieved from /agents/details endpoint(data->displayUser->encodedZuid)
+            - Ex: `X1-ZU10bs62tnoyy2x_5dugv`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: |
+            - Total number of record per api call
+            - Ex: `20`
+            - It has a value ranging from 0 to 100
+            - Default value: `5`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /zipcode/all-state:
+    get:
+      summary: "List of U.S.A States"
+      tags:
+        - Zipcode U.S.A
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /zipcode/zipcode-by-usps:
+    get:
+      summary: "Get zip code by usps"
+      tags:
+        - Zipcode U.S.A
+      parameters:
+        - name: usps
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "AL"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /zipcode/zipcode-by-state:
+    get:
+      summary: "Get zip code by state"
+      tags:
+        - Zipcode U.S.A
+      parameters:
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Wyoming"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /zipcode/zipcode-by-city:
+    get:
+      summary: "Get zip code by city"
+      tags:
+        - Zipcode U.S.A
+      parameters:
+        - name: city
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Moody"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /v2/properties/search-for-sale:
+    post:
+      summary: "properties/search-for-sale"
+      tags:
+        - Properties (version 2)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  example: "New York, NY"
+                  description: |
+                    - Enter an address, neighborhood, city, or ZIP code
+                page:
+                  type: number
+                  default: 1
+                  description: |
+                    - The page index, for paging purpose
+                    - Default: 1
+                sortBy:
+                  type: string
+                  example: "relevance"
+                  description: |
+                    - `relevance`: Homes for You
+                    - `recentlyChanged`: Recently Changed
+                    - `daysOn`: Newest
+                    - `priceHighToLow`: Price: High to Low
+                    - `priceLowToHigh`: Price: Low to High
+                    - `beds`: Bedrooms
+                    - `baths`: Bathrooms
+                    - `livingArea`: Square Feet
+                    - `lotArea`: Lot Size
+                    - `yearBuilt`: Year Built
+                priceType:
+                  type: string
+                  example: "MonthlyPayment"
+                  description: |
+                    - `ListPrice`: List Price
+                    - `MonthlyPayment: Monthly Payment
+                price:
+                  type: object
+                  example: { "min": 60000, "max": 240000 }
+                  description: |
+                    - Ex: {"min":60000,"max":240000}
+                    - Or missing min: {"max":240000}
+                    - Or missing max: {"min":60000}
+                hoaFilters:
+                  type: object
+                  example:
+                    {
+                      "includeNoHoaDataHomes": false,
+                      "hoaFeesPerMonthRange": { "max": 800 },
+                    }
+                  description: |
+                    - Ex: {"includeNoHoaDataHomes":false,"hoaFeesPerMonthRange":{"max":800}}
+                    - includeNoHoaDataHomes(Include homes with no HOA data): true/false
+                    - Value for hoaFeesPerMonthRange->max:100,200,300,400,500,600,700,800,900,1000,1500,2000
+                bedrooms:
+                  type: object
+                  example: { "min": 0, "max": 2 }
+                  description: |
+                    - Ex: {"min":0,"max":2}
+                    - Or missing min: {"max":2}
+                    - Or missing max: {"min":0}
+                    - Values for bedrooms from 0 to 5
+                minBathrooms:
+                  type: number
+                  example: 1
+                  description: |
+                    - Ex: 1
+                    - Values for minBathrooms: 1, 1.5, 2, 3, 4
+                homeTypes:
+                  type: string
+                  example: ["houses","townhomes"]
+                  description: |
+                    - It can input multiple values, and the values should be separated by commas
+                    - Ex: ["houses","townhomes"]
+                    - `houses`: Houses
+                    - `townhomes`: Townhomes
+                    - `condosCoopsApartments`: Condos/Co-ops/Apartments
+                    - `lotsLand`: Lots/Land
+                    - `multiFamily`: Multi-family
+                    - `manufactured`: Manufactured
+                homeSize:
+                  type: object
+                  example: { "min": 500, "max": 2500 }
+                  description: |
+                    - Home size
+                    - Ex: {"min":500,"max":2500}
+                    - Or missing min: {"max":2500}
+                    - Or missing max: {"min":500}
+                    - `500`: 500 sqft
+                    - `750`: 750 sqft
+                    - `1000`: 1000 sqft
+                    - `1250`: 1250 sqft
+                    - `1500`: 1500 sqft
+                    - `1750`: 1750 sqft
+                    - `2000`: 2000 sqft
+                    - `2250`: 2250 sqft
+                    - `2500`: 2500 sqft
+                    - `3000`: 3000 sqft
+                    - `3500`: 3500 sqft
+                    - `4000`: 4000 sqft
+                    - `5000`: 5000 sqft
+                    - `7500`: 7500 sqft
+                lotSize:
+                  type: object
+                  example: { "min": 1000, "max": 2000 }
+                  description: |
+                    - Lot size: 1 acre = 43560 sqft
+                    - Ex: {"min":1000,"max": 2000}
+                    - Or missing min: {"max":2000}
+                    - Or missing max: {"min":1000}
+                    - `1000`: 1000 sqft
+                    - `2000`: 2000 sqft
+                    - `3000`: 3000 sqft
+                    - `4000`: 4000 sqft
+                    - `5000`: 5000 sqft
+                    - `7500`: 7500 sqft
+                    - `10890`: 1/4 acres
+                    - `21780`: 1/2 acres
+                    - `43560`: 1 acre
+                    - `87120`: 2 acres
+                    - `217800`: 5 acres
+                    - `435600`: 10 acres
+                    - `1089000`: 25 acres
+                    - `2178000`: 50 acres
+                    - `4356000`: 100 acres
+                yearBuilt:
+                  type: object
+                  example: { "min": 2009, "max": 2020 }
+                  description: |
+                    - Year built
+                    - Ex: {"min":2009,"max": 2020}
+                    - Or missing min: {"max": 2020}
+                    - Or missing max: {"min":2009}
+                    - Values for yearBuilt: From 1900 to current year
+                amenities:
+                  type: string
+                  example: ["airConditioning", "pool"]
+                  description: |
+                    - Amenities
+                    - It can input multiple values, and the values should be separated by commas
+                    - Ex: ["airConditioning", "pool"]
+                    - `airConditioning`: Air conditioning
+                    - `pool`: Pool
+                    - `waterfront`: Waterfront
+                minParkingSpots:
+                  type: number
+                  example: 3
+                  description: |
+                    - Parking spots
+                    - `1`: 1+
+                    - `2`: 2+
+                    - `3`: 3+
+                    - `4`: 4+
+                hasGarage:
+                  type: boolean
+                  example: true
+                  description: |
+                    - Garage
+                    - Values for hasGarage: true or false
+                hasSingleStory:
+                  type: boolean
+                  example: true
+                  description: |
+                    - Single-story
+                    - Values for hasSingleStory: true or false
+                basementTypes:
+                  type: string
+                  example: ["unFinished"]
+                  description: |
+                    - Basement types
+                    - `finished`: finished
+                    - `unFinished`: Unfinished
+                keywords:
+                  type: string
+                  example: "MLS"
+                  description: |
+                    - Keywords: Backyard, fireplace, horses, MLS #, etc.
+                    - Ex: "MLS"
+                listingType:
+                  type: string
+                  example: "agent"
+                  default: "agent"
+                  description: |
+                    - Listing type
+                    - Default: agent
+                    - Ex: "other"
+                    - `agent`: Listing type by agent
+                    - `other`: Listing type by other
+                listingByAgent:
+                  type: string
+                  example: ["preForeclosure", "auctions", "newConstruction"]
+                  description: |
+                    - Listing type by agent: Only use for the case when listingType is set to "agent"
+                    - Ex: ["preForeclosure", "auctions", "newConstruction"]
+                    - `agentListed`: Agent listed
+                    - `newConstruction`: New construction
+                    - `foreclosure`: Foreclosure
+                    - `auctions`: Auctions
+                    - `foreclosed`: Foreclosed
+                    - `preForeclosure`: Pre-foreclosure
+                listingByOther:
+                  type: string
+                  example: ["preForeclosure", "foreclosed", "auctions"]
+                  description: |
+                    - Listing type by other: Only use for the case when listingType is set to "other"
+                    - Ex: ["preForeclosure", "foreclosed", "auctions"]
+                    - `ownerPosted`: Owner posted
+                    - `agentListed`: Agent listed
+                    - `newConstruction`: New construction
+                    - `foreclosure`: Foreclosure
+                    - `auctions`: Auctions
+                    - `foreclosed`: Foreclosed
+                    - `preForeclosure`: Pre-foreclosure
+                listingStatus:
+                  type: string
+                  example: ["comingSoon", "pricedrop"]
+                  description: |
+                    - Listing status
+                    - Ex: ["comingSoon", "pricedrop"]
+                    - `comingSoon`: Coming soon
+                    - `priceDrop`: Price drop
+                    - `acceptingBackupOffers`: Accepting backup offers
+                    - `pendingAndUnderContract`: Pending & under contract
+                touring:
+                  type: string
+                  example: ["3dTour", "openHouse"]
+                  description: |
+                    - Touring
+                    - Ex: ["3dTour", "openHouse"]
+                    - `openHouse`: Open house
+                    - `3dTour`: 3D tour
+                timeOnZillow:
+                  type: string
+                  example: "1m"
+                  description: |
+                    - Time on Zillow
+                    - `1d`: 1 day
+                    - `1w`: 1 week
+                    - `2w`: 1 weeks
+                    - `1m`: 1 month
+                    - `2m`: 2 months
+                    - `6m`: 6 months
+                    - `12m`: 12 months
+                    - `24m`: 24 months
+                    - `36m`: 36 months
+                surroundingViews:
+                  type: string
+                  example: ["city", "water"]
+                  description: |
+                    - Surrounding views
+                    - Ex: ["city", "water"]
+                    - `city`: City
+                    - `mountain`: Mountain
+                    - `park`: Park
+                    - `water`: Water
+                seniorLiving:
+                  type: string
+                  example: ["hide55+Communities"]
+                  description: |
+                    - Surrounding views
+                    - Ex: ["hide55+Communities"]
+                    - `hide55+Communities`: Hide 55+ Communities
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /v2/properties/search-for-rent:
+    post:
+      summary: "properties/search-for-rent"
+      tags:
+        - Properties (version 2)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  example: "New York, NY"
+                  description: |
+                    - Enter an address, neighborhood, city, or ZIP code
+                page:
+                  type: number
+                  default: 1
+                  description: |
+                    - The page index, for paging purpose
+                    - Default: 1
+                sortBy:
+                  type: string
+                  example: "relevance"
+                  description: |
+                    - Sort
+                    - `relevance`: Homes for You
+                    - `recentlyChanged`: Recently Changed
+                    - `daysOn`: Newest
+                    - `priceHighToLow`: Price: High to Low
+                    - `priceLowToHigh`: Price: Low to High
+                    - `beds`: Bedrooms
+                    - `baths`: Bathrooms
+                    - `livingArea`: Square Feet
+                    - `lotArea`: Lot Size
+                    - `yearBuilt`: Year Built
+                price:
+                  type: object
+                  example: { "min": 60000, "max": 240000 }
+                  description: |
+                    - Price range
+                    - Ex: {"min":60000,"max":240000}
+                    - Or missing min: {"max":240000}
+                    - Or missing max: {"min":60000}
+                bedrooms:
+                  type: object
+                  example: { "min": 0, "max": 2 }
+                  description: |
+                    - Bedrooms
+                    - Ex: {"min":0,"max":2}
+                    - Or missing min: {"max":2}
+                    - Or missing max: {"min":0}
+                    - Values for bedrooms from 0 to 5
+                minBathrooms:
+                  type: number
+                  example: 1
+                  description: |
+                    - Bathrooms
+                    - Ex: 1
+                    - Values for minBathrooms: 1, 1.5, 2, 3, 4
+                homeTypes:
+                  type: string
+                  example: ["townhomes","houses"]
+                  description: |
+                    - It can input multiple values, and the values should be separated by commas
+                    - Ex: ["townhomes","houses"]
+                    - `houses`: Houses
+                    - `townhomes`: Townhomes
+                    - `apartmentsCondosCoops`: Apartments/Condos/Co-ops
+                moveInDate:
+                  type: object
+                  example:
+                    { "availableBefore": "2023-11-18", "hideListings": true }
+                  description: |
+                    - Move-in date
+                    - Ex: {"availableBefore": "2023-11-18", "hideListings": true}
+                    - `availableBefore`: The date has the format YYYY-MM-DD
+                    - `hideListings`(Hide listings with no date provided): true/false
+                rentalAmenities:
+                  type: string
+                  example: ["allowsLargeDogs", "allowsSmallDogs"]
+                  description: |
+                    - Rental amenities
+                    - Ex: ["allowsLargeDogs", "allowsSmallDogs"]
+                    - `allowsLargeDogs`: Allows large dogs
+                    - `allowsSmallDogs`: Allows small dogs
+                    - `allowsCats`: Allows cats
+                    - `onSiteParking`: On-site parking
+                    - `inUnitLaundry`: In-unit laundry
+                    - `incomeRestricted`: Income restricted
+                    - `apartmentCommunity`: Apartment community
+                    - `acceptsZillowApplications`: Accepts Zillow Applications
+                popularFilters:
+                  type: string
+                  example: ["3dTourOnly", "singleStoryHomesOnly"]
+                  description: |
+                    - Popular filters
+                    - Ex: ["3dTourOnly", "singleStoryHomesOnly"]
+                    - `3dTourOnly`: 3D tour only
+                    - `singleStoryHomesOnly`: Single-story homes only
+                homeSize:
+                  type: object
+                  example: { "min": 500, "max": 2500 }
+                  description: |
+                    - Home size
+                    - Ex: {"min":500,"max":2500}
+                    - Or missing min: {"max":2500}
+                    - Or missing max: {"min":500}
+                    - `500`: 500 sqft
+                    - `750`: 750 sqft
+                    - `1000`: 1000 sqft
+                    - `1250`: 1250 sqft
+                    - `1500`: 1500 sqft
+                    - `1750`: 1750 sqft
+                    - `2000`: 2000 sqft
+                    - `2250`: 2250 sqft
+                    - `2500`: 2500 sqft
+                    - `3000``: 3000 sqft
+                    - `3500`: 3500 sqft
+                    - `4000`: 4000 sqft
+                    - `5000`: 5000 sqft
+                    - `7500`: 7500 sqft
+                lotSize:
+                  type: object
+                  example: { "min": 1000, "max": 2000 }
+                  description: |
+                    - Lot size: 1 acre = 43560 sqft
+                    - Ex: {"min":1000,"max": 2000}
+                    - Or missing min: {"max":2000}
+                    - Or missing max: {"min":1000}
+                    - `1000`: 1000 sqft
+                    - `2000`: 2000 sqft
+                    - `3000`: 3000 sqft
+                    - `4000`: 4000 sqft
+                    - `5000`: 5000 sqft
+                    - `7500`: 7500 sqft
+                    - `10890`: 1/4 acres
+                    - `21780`: 1/2 acres
+                    - `43560`: 1 acre
+                    - `87120`: 2 acres
+                    - `217800`: 5 acres
+                    - `435600`: 10 acres
+                    - `1089000`: 25 acres
+                    - `2178000`: 50 acres
+                    - `4356000`: 100 acres
+                yearBuilt:
+                  type: object
+                  example: { "min": 2009, "max": 2020 }
+                  description: |
+                    - Year built
+                    - Ex: {"min":2009,"max": 2020}
+                    - Or missing min: {"max": 2020}
+                    - Or missing max: {"min":2009}
+                    - Values for yearBuilt: From 1900 to current year
+                basementTypes:
+                  type: string
+                  example: ["unFinished"]
+                  description: |
+                    - Basement types
+                    - Ex: ["unFinished"]
+                    - `finished`: finished
+                    - `unFinished`: Unfinished
+                amenities:
+                  type: string
+                  example: ["mustHaveAC", "mustHavePool"]
+                  description: |
+                    - Amenities
+                    - `mustHaveAC`: Must have A/C
+                    - `mustHavePool`: Must have pool
+                    - `onWaterfront`: On waterfront
+                views:
+                  type: string
+                  example: ["city", "mountain"]
+                  description: |
+                    - Views
+                    - Ex: ["city", "mountain"]
+                    - `city`: City
+                    - `mountain`: Mountain
+                    - `park`: Park
+                    - `water`: Water
+                timeOnZillow:
+                  type: string
+                  example: "1m"
+                  description: |
+                    - Time on Zillow
+                    - `1d`: 1 day
+                    - `1w`: 1 week
+                    - `2w`: 1 weeks
+                    - `1m`: 1 month
+                    - `2m`: 2 months
+                    - `6m`: 6 months
+                    - `12m`: 12 months
+                    - `24m`: 24 months
+                    - `36m`: 36 months
+                keywords:
+                  type: string
+                  example: "MLS"
+                  description: |
+                    - Keywords: Backyard, fireplace, horses, MLS #, etc.
+                    - Ex: "MLS"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /v2/properties/search-sold:
+    post:
+      summary: "properties/search-sold"
+      tags:
+        - Properties (version 2)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: string
+                  example: "New York, NY"
+                  description: |
+                    - Enter an address, neighborhood, city, or ZIP code
+                page:
+                  type: number
+                  default: 1
+                  description: |
+                    - The page index, for paging purpose
+                    - Default: 1
+                sortBy:
+                  type: string
+                  example: "relevance"
+                  description: |
+                    - `relevance`: Homes for You
+                    - `recentlyChanged`: Recently Changed
+                    - `daysOn`: Newest
+                    - `priceHighToLow`: Price: High to Low
+                    - `priceLowToHigh`: Price: Low to High
+                    - `beds`: Bedrooms
+                    - `baths`: Bathrooms
+                    - `livingArea`: Square Feet
+                    - `lotArea`: Lot Size
+                    - `yearBuilt`: Year Built
+                price:
+                  type: object
+                  example: { "min": 60000, "max": 240000 }
+                  description: |
+                    - Ex: {"min":60000,"max":240000}
+                    - Or missing min: {"max":240000}
+                    - Or missing max: {"min":60000}
+                hoaFilters:
+                  type: object
+                  example:
+                    {
+                      "includeNoHoaDataHomes": false,
+                      "hoaFeesPerMonthRange": { "max": 800 },
+                    }
+                  description: |
+                    - Ex: {"includeNoHoaDataHomes":false,"hoaFeesPerMonthRange":{"max":800}}
+                    - includeNoHoaDataHomes(Include homes with no HOA data): true/false
+                    - Value for hoaFeesPerMonthRange->max:100,200,300,400,500,600,700,800,900,1000,1500,2000
+                bedrooms:
+                  type: object
+                  example: { "min": 0, "max": 2 }
+                  description: |
+                    - Ex: {"min":0,"max":2}
+                    - Or missing min: {"max":2}
+                    - Or missing max: {"min":0}
+                    - Values for bedrooms from 0 to 5
+                minBathrooms:
+                  type: number
+                  example: 1
+                  description: |
+                    - Ex: 1
+                    - Values for minBathrooms: 1, 1.5, 2, 3, 4
+                homeTypes:
+                  type: string
+                  example: ["houses","townhomes"]
+                  description: |
+                    - It can input multiple values, and the values should be separated by commas
+                    - Ex: ["houses","townhomes"]
+                    - `houses`: Houses
+                    - `townhomes`: Townhomes
+                    - `condosCoopsApartments`: Condos/Co-ops/Apartments
+                    - `lotsLand`: Lots/Land
+                    - `multiFamily`: Multi-family
+                    - `manufactured`: Manufactured
+                homeSize:
+                  type: object
+                  example: { "min": 500, "max": 2500 }
+                  description: |
+                    - Home size
+                    - Ex: {"min":500,"max":2500}
+                    - Or missing min: {"max":2500}
+                    - Or missing max: {"min":500}
+                    - `500`: 500 sqft
+                    - `750`: 750 sqft
+                    - `1000`: 1000 sqft
+                    - `1250`: 1250 sqft
+                    - `1500`: 1500 sqft
+                    - `1750`: 1750 sqft
+                    - `2000`: 2000 sqft
+                    - `2250`: 2250 sqft
+                    - `2500`: 2500 sqft
+                    - `3000`: 3000 sqft
+                    - `3500`: 3500 sqft
+                    - `4000`: 4000 sqft
+                    - `5000`: 5000 sqft
+                    - `7500`: 7500 sqft
+                lotSize:
+                  type: object
+                  example: { "min": 1000, "max": 2000 }
+                  description: |
+                    - Lot size: 1 acre = 43560 sqft
+                    - Ex: {"min":1000,"max": 2000}
+                    - Or missing min: {"max":2000}
+                    - Or missing max: {"min":1000}
+                    - `1000`: 1000 sqft
+                    - `2000`: 2000 sqft
+                    - `3000`: 3000 sqft
+                    - `4000`: 4000 sqft
+                    - `5000`: 5000 sqft
+                    - `7500`: 7500 sqft
+                    - `10890`: 1/4 acres
+                    - `21780`: 1/2 acres
+                    - `43560`: 1 acre
+                    - `87120`: 2 acres
+                    - `217800`: 5 acres
+                    - `435600`: 10 acres
+                    - `1089000`: 25 acres
+                    - `2178000`: 50 acres
+                    - `4356000`: 100 acres
+                yearBuilt:
+                  type: object
+                  example: { "min": 2009, "max": 2020 }
+                  description: |
+                    - Year built
+                    - Ex: {"min":2009,"max": 2020}
+                    - Or missing min: {"max": 2020}
+                    - Or missing max: {"min":2009}
+                    - Values for yearBuilt: From 1900 to current year
+                amenities:
+                  type: string
+                  example: ["airConditioning", "pool"]
+                  description: |
+                    - Amenities
+                    - It can input multiple values, and the values should be separated by commas
+                    - Ex: ["airConditioning", "pool"]
+                    - `airConditioning`: Air conditioning
+                    - `pool`: Pool
+                    - `waterfront`: Waterfront
+                minParkingSpots:
+                  type: number
+                  example: 3
+                  description: |
+                    - Parking spots
+                    - `1`: 1+
+                    - `2`: 2+
+                    - `3`: 3+
+                    - `4`: 4+
+                hasGarage:
+                  type: boolean
+                  example: true
+                  description: |
+                    - Garage
+                    - Values for hasGarage: true or false
+                hasSingleStory:
+                  type: boolean
+                  example: true
+                  description: |
+                    - Single-story
+                    - Values for hasSingleStory: true or false
+                basementTypes:
+                  type: string
+                  example: ["unFinished"]
+                  description: |
+                    - Basement types
+                    - `finished`: finished
+                    - `unFinished`: Unfinished
+                keywords:
+                  type: string
+                  example: "MLS"
+                  description: |
+                    - Keywords: Backyard, fireplace, horses, MLS #, etc.
+                    - Ex: "MLS"
+                soldInLast:
+                  type: string
+                  example: "1m"
+                  description: |
+                    - Sold in last
+                    - `1d`: 1 day
+                    - `1w`: 1 week
+                    - `2w`: 1 weeks
+                    - `1m`: 1 month
+                    - `2m`: 2 months
+                    - `6m`: 6 months
+                    - `12m`: 12 months
+                    - `24m`: 24 months
+                    - `36m`: 36 months
+                surroundingViews:
+                  type: string
+                  example: ["city", "water"]
+                  description: |
+                    - Surrounding views
+                    - Ex: ["city", "water"]
+                    - `city`: City
+                    - `mountain`: Mountain
+                    - `park`: Park
+                    - `water`: Water
+                seniorLiving:
+                  type: string
+                  example: ["hide55+Communities"]
+                  description: |
+                    - Senior living
+                    - Ex: "seniorLiving": ["hide55+Communities"]
+                    - `hide55+Communities``: Hide 55+ Communities
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /v2/properties/detail:
+    get:
+      summary: "properties/detail"
+      tags:
+        - Properties (version 2)
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "32348522"
+          description: |
+            - The `zpid` (data->property->zpid) from  **search-for-sale** OR  **search-for-rent** OR **search-sold** endpoint
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Key
+security:
+  - X-API-Key: []
+tags:
+  - name: Property search
+  - name: Property details
+  - name: Similar homes
+  - name: Stats and History
+  - name: Agents
+  - name: Zipcode U.S.A
+  - name: Properties (version 2)

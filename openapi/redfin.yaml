@@ -1,0 +1,2775 @@
+openapi: 3.0.0
+info:
+  title: "Redfin.com Data Documentation"
+  description: "Real-time data, unofficial API redfin.com, search for-sale, sold and rental listings Redfin com is a prominent online real estate marketplace in the United States that specializes in buying and selling residential properties"
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/redfin-com-data
+paths:
+  /properties/auto-complete:
+    get:
+      summary: "properties/auto-complete"
+      tags:
+        - Property search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "New York"
+          description: |
+            - Required: true
+            - Ex: `New York`
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - Total number of record per api call
+            - It has a value ranging from 1 to 50
+            - Ex: `2`
+            - Default: `25`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-sale:
+    get:
+      summary: "properties/search-sale"
+      tags:
+        - Property search
+      parameters:
+        - name: regionId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "6_2446"
+          description: |
+            - Use the 'page' parameter to get the full data until 'moreData=false
+            - Description for endpoint:  Search properties for sale
+            - Required: true
+            - `regionId` can be retrieved from /properties/auto-complete endpoint(data->rows->id)
+            - Ex: `6_2446` (Camas, WA, USA)
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 100
+            default: 350
+          description: |
+            - Total number of record per api call
+            - It has a value ranging from 1 to 1000
+            - Ex: `100`
+            - Default: `350`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 100
+            default: 350
+          description: |
+            - Total number of record per api call
+            - It has a value ranging from 1 to 1000
+            - Ex: `100`
+            - Default: `350`
+        - name: prices
+          in: query
+          schema:
+            type: string
+            example: "50000,350000"
+          description: |
+            - Prices
+            - Min and max prices should be separated by commas
+            - Ex: `50000,350000`
+            - In the case of only having the minimum price: Ex: `50000`
+            - In the case of only having the maximum price: Ex: `,350000`
+            - In case of having both: Ex: `50000,350000`
+        - name: beds
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Bedroom
+            - Default value: No min
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+            - `6`: 6+
+        - name: baths
+          in: query
+          schema:
+            type: number
+            example: 1.5
+          description: |
+            - Bathroom
+            - Default value: No min
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `2.5`: 2.5+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+            - `6`: 6+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "1,3"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `1,3`
+            - Default value: Select all
+            - `1`: House
+            - `3`: Townhouse
+            - `2`: Condo
+            - `4`: Multi-family
+            - `7`: Manufactured
+            - `8`: Co-op
+            - `5`: Land
+            - `6`: Other
+        - name: squareFeet
+          in: query
+          schema:
+            type: string
+            example: "500,1000"
+          description: |
+            - Square feet
+            - Min and max prices should be separated by commas
+            - Ex: `500,1000`
+            - In the case of only having the minimum square feet: Ex: `500`
+            - In the case of only having the maximum square feet: Ex: `,1000`
+            - In case of having both: Ex: `500,1000`
+            - `500`: 500
+            - `750`: 500
+            - `1000`: 1000
+            - ...........
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "2000,8000"
+          description: |
+            - Lot size
+            - Min and max prices should be separated by commas
+            - Ex: `2000,8000`
+            - In the case of only having the minimum lot size: Ex: `2000`
+            - In the case of only having the maximum lot size: Ex: `,8000`
+            - In case of having both: Ex: `2000,8000`
+            - `2000`: 2,000 sq. ft.
+            - `4500`: 4,500 sq. ft.
+            - `6500`: 6,500 sq. ft.
+            - `8000`: 8,000 sq. ft.
+            - `10890`: 0.25 acres
+            - `21780`: 0.5 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+        - name: status
+          in: query
+          schema:
+            type: number
+            example: 9
+          description: |
+            - Status
+            - Ex: `9`
+            - Default: `9`
+            - Choose one of the values below
+            - `0`: Coming soon
+            - `1`: Active
+            - `130`: Under contract/pending
+            - `9`: Coming soon + Active
+            - `8`: Coming soon + Under contract/pending
+            - `131`: Active + Under contract/pending
+            - `139`: Coming soon + Active + Under contract/pending
+        - name: timeOnRedfin
+          in: query
+          schema:
+            type: string
+            example: "1-"
+          description: |
+            - Time On Redfin
+            - Ex: `-`
+            - Default: `-`
+            - Choose one of the values below
+            - `-`: Any
+            - `1-`: Less than 1 day
+            - `3-`: Less than 3 days
+            - ......................
+            - `-7`: More than 7 days
+            - `-14`: More than 14 days
+            - ......................
+        - name: stories
+          in: query
+          schema:
+            type: string
+            example: "1,3"
+          description: |
+            - Stories
+            - Min and max stories should be separated by commas
+            - Default minimum stories is `1`
+            - Ex: `1,3`
+            - In the case of only having the minimum stories: Ex: `1`
+            - In the case of only having the maximum stories: Ex: `,3`
+            - In case of having both: Ex: `1,3`
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2009,2012"
+          description: |
+            - Year built
+            - Min and max year built should be separated by commas
+            - Ex: `2009,2012`
+            - In the case of only having the minimum year built: Ex: `2009`
+            - In the case of only having the maximum year built: Ex: `,2012`
+            - In case of having both: Ex: `2009,2012`
+            - `1900`: 1900
+            - `1910`: 1910
+            - ............
+        - name: booleanFilters
+          in: query
+          schema:
+            type: string
+            example: "fixer,excl_ar"
+          description: |
+            - Used in case the items have true/false values on Redfin
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `fixer,excl_ar`
+            - `fixer`: Fixer-upper
+            - `excl_ar`: Exclude 55+ communities
+            - `include_outdoor_parking`: Include outdoor parking
+            - `rv_parking`: RV parking
+            - `ac`: Air conditioning
+            - `fireplace`: Fireplace
+            - `primary_bed_on_main`: Primary bedroom on main floor
+            - `wf`: Waterfront
+            - `view`: Has view
+            - `basement_finished`: Basement finished
+            - `basement_unfinished`: Basement unfinished
+            - `pets_allowed`: Pets allowed
+            - `wd`: Washer/dryer hookup
+            - `guest_house`: Guest house
+            - `accessible`: Accessible home
+            - `elevator`: Elevator
+            - `green`: Green home
+            - `excl_ll`: Exclude land leases
+            - `excl_ss`: Exclude short sales
+            - `unrated_schools`: Include unrated schools
+            - `virtual_tour`: 3D & video tour
+        - name: pool
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Pool
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: Private pool
+            - `2`: Community pool
+            - `3`: Private or community pool
+            - `4`: No private pool
+        - name: garageSpots
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Garage spots
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+        - name: hoaFees
+          in: query
+          schema:
+            type: number
+            example: 25
+          description: |
+            - HOA fees
+            - Ex: `0`
+            - Choose one of the values below
+            - `0`: No Hoa
+            - `25`: $25/month
+            - `50`: $50/month
+            - `75`: $75/month
+            - ...............
+        - name: priceSqft
+          in: query
+          schema:
+            type: string
+            example: "100"
+          description: |
+            - Price/Sq. Ft.
+            - Min and max price/Sq. Ft should be separated by commas
+            - Ex: `100,250`
+            - In the case of only having the minimum price/Sq. Ft: Ex: `100`
+            - In the case of only having the maximum price/Sq. Ft: Ex: `,250`
+            - In case of having both: Ex: `100,250`
+            - `50`: 50
+            - `100`: 100
+            - `150`: 150
+            - `200`: 200
+            - ............
+        - name: propertyTaxes
+          in: query
+          schema:
+            type: number
+            example: 250
+          description: |
+            - Property taxes
+            - Ex: `250`
+            - Choose one of the values below
+            - `250`: $250/year
+            - `500`: $500/year
+            - `750`: $750/year
+            - `1000`: $1000/year
+            - ...............
+        - name: acceptedFinancing
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - Accepted financing
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: FHA
+            - `2`: VA
+        - name: priceReduced
+          in: query
+          schema:
+            type: string
+            example: "3-"
+          description: |
+            - Price reduced
+            - Ex: `1-`
+            - Choose one of the values below
+            - `1-`: Less than 1 day
+            - `3-`: Less than 3 days
+            - `7-`: Less than 7 days
+            - `14-`: Less than 14 days
+            - `30-`: Less than 30 days
+            - `-30`: More than 30 days
+            - `-60`: More than 60 days
+            - `-120`: More than 120 days
+            - `-`: Any time
+        - name: listingType
+          in: query
+          schema:
+            type: string
+            example: "1,2,3,4,5,6,7"
+          description: |
+            - Listing type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `1,2,3,4,5,6,7`
+            - Default value: `1,2,3,4,5,6,7` - Turn on MLS listings select all and select For Sale By Owner,  Foreclosures
+            - `5,6`: New construction
+            - `1,7`: By agent
+            - `2`: MLS-Listed Foreclosures
+            - `3`: For Sale By Owner
+            - `4`: Foreclosures
+        - name: greatSchoolsRating
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - GreatSchools rating
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - ........
+            - `10`: 10
+        - name: schoolTypes
+          in: query
+          schema:
+            type: string
+            example: "3"
+          description: |
+            - School types
+            - Default value: `2` when select greatSchoolsRating
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: Elementary school
+            - `2`: Middle school
+            - `3`: High school
+        - name: walkScore
+          in: query
+          schema:
+            type: number
+            example: 20
+          description: |
+            - Walk Score
+            - Ex: `10`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: transitScore
+          in: query
+          schema:
+            type: number
+            example: 30
+          description: |
+            - Transit Score
+            - Ex: `10`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: bikeScore
+          in: query
+          schema:
+            type: number
+            example: 10
+          description: |
+            - Bike Score
+            - Ex: `30`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: openHouse
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - Open house
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: Any time
+            - `2`: This weekend
+        - name: keyword
+          in: query
+          schema:
+            type: string
+            example: "office"
+          description: |
+            - Keyword search: e.g. office, balcony, modern
+            - Ex: `office`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-rent:
+    get:
+      summary: "properties/search-rent"
+      tags:
+        - Property search
+      parameters:
+        - name: regionId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "6_2446"
+          description: |
+            - Use the 'page' parameter to get the full data until 'moreData=false
+            - Description for endpoint:  Search properties for sale
+            - Required: true
+            - `regionId` can be retrieved from /properties/auto-complete endpoint(data->rows->id)
+            - Ex: `6_2446` (Camas, WA, USA)
+        - name: prices
+          in: query
+          schema:
+            type: string
+            example: "50000,350000"
+          description: |
+            - Prices
+            - Min and max prices should be separated by commas
+            - Ex: `50000,350000`
+            - In the case of only having the minimum price: Ex: `50000`
+            - In the case of only having the maximum price: Ex: `,350000`
+            - In case of having both: Ex: `50000,350000`
+        - name: beds
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Bedroom
+            - Default value: No min
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+            - `6`: 6+
+        - name: baths
+          in: query
+          schema:
+            type: number
+            example: 1.5
+          description: |
+            - Bathroom
+            - Default value: No min
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `2.5`: 2.5+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+            - `6`: 6+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "1,3"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `1,3`
+            - Default value: Select all
+            - `1`: House
+            - `4`: Apartment
+            - `3`: Townhouse
+            - `2`: Condo
+        - name: moveInDate
+          in: query
+          schema:
+            type: string
+            example: "2024-03-21"
+          description: |
+            - Move in date
+            - Format: `YYYY-MM-DD`
+            - Ex: `2024-03-21`
+        - name: squareFeet
+          in: query
+          schema:
+            type: string
+            example: "500,1000"
+          description: |
+            - Square feet
+            - Min and max prices should be separated by commas
+            - Ex: `500,1000`
+            - In the case of only having the minimum square feet: Ex: `500`
+            - In the case of only having the maximum square feet: Ex: `,1000`
+            - In case of having both: Ex: `500,1000`
+            - `500`: 500
+            - `750`: 500
+            - `1000`: 1000
+            - ...........
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "2000,8000"
+          description: |
+            - Lot size
+            - Min and max prices should be separated by commas
+            - Ex: `2000,8000`
+            - In the case of only having the minimum lot size: Ex: `2000`
+            - In the case of only having the maximum lot size: Ex: `,8000`
+            - In case of having both: Ex: `2000,8000`
+            - `2000`: 2,000 sq. ft.
+            - `4500`: 4,500 sq. ft.
+            - `6500`: 6,500 sq. ft.
+            - `8000`: 8,000 sq. ft.
+            - `10890`: 0.25 acres
+            - `21780`: 0.5 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+        - name: status
+          in: query
+          schema:
+            type: number
+            example: 9
+          description: |
+            - Status
+            - Ex: `9`
+            - Default: `9`
+            - Choose one of the values below
+            - `0`: Coming soon
+            - `1`: Active
+            - `130`: Under contract/pending
+            - `9`: Coming soon + Active
+            - `8`: Coming soon + Under contract/pending
+            - `131`: Active + Under contract/pending
+            - `139`: Coming soon + Active + Under contract/pending
+        - name: timeOnRedfin
+          in: query
+          schema:
+            type: string
+            example: "1-"
+          description: |
+            - Time On Redfin
+            - Ex: `-`
+            - Default: `-`
+            - Choose one of the values below
+            - `-`: Any
+            - `1-`: Less than 1 day
+            - `3-`: Less than 3 days
+            - ......................
+            - `-7`: More than 7 days
+            - `-14`: More than 14 days
+            - ......................
+        - name: stories
+          in: query
+          schema:
+            type: string
+            example: "1,3"
+          description: |
+            - Stories
+            - Min and max stories should be separated by commas
+            - Default minimum stories is `1`
+            - Ex: `1,3`
+            - In the case of only having the minimum stories: Ex: `1`
+            - In the case of only having the maximum stories: Ex: `,3`
+            - In case of having both: Ex: `1,3`
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2009,2012"
+          description: |
+            - Year built
+            - Min and max year built should be separated by commas
+            - Ex: `2009,2012`
+            - In the case of only having the minimum year built: Ex: `2009`
+            - In the case of only having the maximum year built: Ex: `,2012`
+            - In case of having both: Ex: `2009,2012`
+            - `1900`: 1900
+            - `1910`: 1910
+            - ............
+        - name: booleanFilters
+          in: query
+          schema:
+            type: string
+            example: "has_deal,dogs_allowed,cats_allowed"
+          description: |
+            - Used in case the items have true/false values on Redfin
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `has_deal,dogs_allowed,cats_allowed`
+            - `has_deal`: Deals - Only show listings with deals or promotions
+            - `dogs_allowed`: Dogs allowed
+            - `cats_allowed`: Cats allowed
+            - `has_ac`: Air conditioning
+            - `has_in_unit_laundry`: In-unit washer and dryer
+            - `has_laundry_facility`: Laundry facility
+            - `has_laundry_hookups`: Washer/dryer hookups
+            - `has_dishwasher`: Dishwasher
+            - `has_parking`: Parking allowed
+            - `utilities_included`: Utilities included
+            - `is_furnished`: Furnished
+            - `has_pool`: Pool
+            - `is_income_restricted`: Income restricted
+            - `is_senior_living`: Senior living
+            - `has_short_term_lease`: Short term
+            - `has_virtual_tour`: 3D & video tour
+        - name: greatSchoolsRating
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - GreatSchools rating
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - ........
+            - `10`: 10
+        - name: schoolTypes
+          in: query
+          schema:
+            type: string
+            example: "3"
+          description: |
+            - School types
+            - Default value: `2` when select greatSchoolsRating
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: Elementary school
+            - `2`: Middle school
+            - `3`: High school
+        - name: walkScore
+          in: query
+          schema:
+            type: number
+            example: 20
+          description: |
+            - Walk Score
+            - Ex: `10`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: transitScore
+          in: query
+          schema:
+            type: number
+            example: 30
+          description: |
+            - Transit Score
+            - Ex: `10`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: bikeScore
+          in: query
+          schema:
+            type: number
+            example: 10
+          description: |
+            - Bike Score
+            - Ex: `30`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-sold:
+    get:
+      summary: "properties/search-sold"
+      tags:
+        - Property search
+      parameters:
+        - name: regionId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "6_2446"
+          description: |
+            - Use the 'page' parameter to get the full data until 'moreData=false
+            - Description for endpoint:  Search properties for sale
+            - Required: true
+            - `regionId` can be retrieved from /properties/auto-complete endpoint(data->rows->id)
+            - Ex: `6_2446` (Camas, WA, USA)
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 100
+            default: 350
+          description: |
+            - Total number of record per api call
+            - It has a value ranging from 1 to 1000
+            - Ex: `100`
+            - Default: `350`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 100
+            default: 350
+          description: |
+            - Total number of record per api call
+            - It has a value ranging from 1 to 1000
+            - Ex: `100`
+            - Default: `350`
+        - name: soldWithin
+          in: query
+          required: true
+          schema:
+            type: number
+            default: 30
+          description: |
+            - Sold within
+             - Ex: `7`
+             - Default value: `180`
+             - Choose one of the values below
+             - `7`: Last 7 days
+             - `30`: Last 1 month
+             - `90`: Last 3 months
+             - `180`: Last 6 months
+             - `365`: Last 1 year
+             - `730`: Last 2 years
+             - `1095`: Last 3 years
+             - `1825`: Last 5 years
+        - name: prices
+          in: query
+          schema:
+            type: string
+            example: "50000,350000"
+          description: |
+            - Prices
+            - Min and max prices should be separated by commas
+            - Ex: `50000,350000`
+            - In the case of only having the minimum price: Ex: `50000`
+            - In the case of only having the maximum price: Ex: `,350000`
+            - In case of having both: Ex: `50000,350000`
+        - name: beds
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Bedroom
+            - Default value: No min
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+            - `6`: 6+
+        - name: baths
+          in: query
+          schema:
+            type: number
+            example: 1.5
+          description: |
+            - Bathroom
+            - Default value: No min
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `2.5`: 2.5+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+            - `6`: 6+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "1,3"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `1,3`
+            - Default value: Select all
+            - `1`: House
+            - `3`: Townhouse
+            - `2`: Condo
+            - `4`: Multi-family
+            - `7`: Manufactured
+            - `8`: Co-op
+            - `5`: Land
+            - `6`: Other
+        - name: squareFeet
+          in: query
+          schema:
+            type: string
+            example: "500,1000"
+          description: |
+            - Square feet
+            - Min and max prices should be separated by commas
+            - Ex: `500,1000`
+            - In the case of only having the minimum square feet: Ex: `500`
+            - In the case of only having the maximum square feet: Ex: `,1000`
+            - In case of having both: Ex: `500,1000`
+            - `500`: 500
+            - `750`: 500
+            - `1000`: 1000
+            - ...........
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "2000,8000"
+          description: |
+            - Lot size
+            - Min and max prices should be separated by commas
+            - Ex: `2000,8000`
+            - In the case of only having the minimum lot size: Ex: `2000`
+            - In the case of only having the maximum lot size: Ex: `,8000`
+            - In case of having both: Ex: `2000,8000`
+            - `2000`: 2,000 sq. ft.
+            - `4500`: 4,500 sq. ft.
+            - `6500`: 6,500 sq. ft.
+            - `8000`: 8,000 sq. ft.
+            - `10890`: 0.25 acres
+            - `21780`: 0.5 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+        - name: stories
+          in: query
+          schema:
+            type: string
+            example: "1,3"
+          description: |
+            - Stories
+            - Min and max stories should be separated by commas
+            - Default minimum stories is `1`
+            - Ex: `1,3`
+            - In the case of only having the minimum stories: Ex: `1`
+            - In the case of only having the maximum stories: Ex: `,3`
+            - In case of having both: Ex: `1,3`
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2009,2012"
+          description: |
+            - Year built
+            - Min and max year built should be separated by commas
+            - Ex: `2009,2012`
+            - In the case of only having the minimum year built: Ex: `2009`
+            - In the case of only having the maximum year built: Ex: `,2012`
+            - In case of having both: Ex: `2009,2012`
+            - `1900`: 1900
+            - `1910`: 1910
+            - ............
+        - name: booleanFilters
+          in: query
+          schema:
+            type: string
+            example: "fixer,excl_ar"
+          description: |
+            - Used in case the items have true/false values on Redfin
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `fixer,excl_ar`
+            - `fixer`: Fixer-upper
+            - `excl_ar`: Exclude 55+ communities
+            - `include_outdoor_parking`: Include outdoor parking
+            - `rv_parking`: RV parking
+            - `ac`: Air conditioning
+            - `fireplace`: Fireplace
+            - `primary_bed_on_main`: Primary bedroom on main floor
+            - `wf`: Waterfront
+            - `view`: Has view
+            - `basement_finished`: Basement finished
+            - `basement_unfinished`: Basement unfinished
+            - `pets_allowed`: Pets allowed
+            - `wd`: Washer/dryer hookup
+            - `guest_house`: Guest house
+            - `accessible`: Accessible home
+            - `elevator`: Elevator
+            - `green`: Green home
+            - `excl_ll`: Exclude land leases
+            - `excl_ss`: Exclude short sales
+            - `unrated_schools`: Include unrated schools
+            - `virtual_tour`: 3D & video tour
+        - name: pool
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Pool
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: Private pool
+            - `2`: Community pool
+            - `3`: Private or community pool
+            - `4`: No private pool
+        - name: garageSpots
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - Garage spots
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+            - `5`: 5+
+        - name: hoaFees
+          in: query
+          schema:
+            type: number
+            example: 25
+          description: |
+            - HOA fees
+            - Ex: `0`
+            - Choose one of the values below
+            - `0`: No Hoa
+            - `25`: $25/month
+            - `50`: $50/month
+            - `75`: $75/month
+            - ...............
+        - name: priceSqft
+          in: query
+          schema:
+            type: string
+            example: "100"
+          description: |
+            - Price/Sq. Ft.
+            - Min and max price/Sq. Ft should be separated by commas
+            - Ex: `100,250`
+            - In the case of only having the minimum price/Sq. Ft: Ex: `100`
+            - In the case of only having the maximum price/Sq. Ft: Ex: `,250`
+            - In case of having both: Ex: `100,250`
+            - `50`: 50
+            - `100`: 100
+            - `150`: 150
+            - `200`: 200
+            - ............
+        - name: propertyTaxes
+          in: query
+          schema:
+            type: number
+            example: 250
+          description: |
+            - Property taxes
+            - Ex: `250`
+            - Choose one of the values below
+            - `250`: $250/year
+            - `500`: $500/year
+            - `750`: $750/year
+            - `1000`: $1000/year
+            - ...............
+        - name: acceptedFinancing
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - Accepted financing
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: FHA
+            - `2`: VA
+        - name: priceReduced
+          in: query
+          schema:
+            type: string
+            example: "3-"
+          description: |
+            - Price reduced
+            - Ex: `1-`
+            - Choose one of the values below
+            - `1-`: Less than 1 day
+            - `3-`: Less than 3 days
+            - `7-`: Less than 7 days
+            - `14-`: Less than 14 days
+            - `30-`: Less than 30 days
+            - `-30`: More than 30 days
+            - `-60`: More than 60 days
+            - `-120`: More than 120 days
+            - `-`: Any time
+        - name: greatSchoolsRating
+          in: query
+          schema:
+            type: number
+            example: 2
+          description: |
+            - GreatSchools rating
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `2`: 2+
+            - ........
+            - `10`: 10
+        - name: schoolTypes
+          in: query
+          schema:
+            type: string
+            example: "3"
+          description: |
+            - School types
+            - Default value: `2` when select greatSchoolsRating
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: Elementary school
+            - `2`: Middle school
+            - `3`: High school
+        - name: walkScore
+          in: query
+          schema:
+            type: number
+            example: 20
+          description: |
+            - Walk Score
+            - Ex: `10`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: transitScore
+          in: query
+          schema:
+            type: number
+            example: 30
+          description: |
+            - Transit Score
+            - Ex: `10`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: bikeScore
+          in: query
+          schema:
+            type: number
+            example: 10
+          description: |
+            - Bike Score
+            - Ex: `30`
+            - Choose one of the values below
+            - `10`: 10+
+            - `20`: 20+
+            - ........
+            - `90`: 90+
+        - name: keyword
+          in: query
+          schema:
+            type: string
+            example: "office"
+          description: |
+            - Keyword search: e.g. office, balcony, modern
+            - Ex: `office`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/search-by-url:
+    get:
+      summary: "properties/search-by-url"
+      tags:
+        - Property search
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.redfin.com/city/30749/NY/New-York"
+          description: |
+            - URL get properties
+            - Ex: `https://www.redfin.com/city/30749/NY/New-York`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/get-listingId:
+    get:
+      summary: "properties/get-listingId"
+      tags:
+        - Property search
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "29171311"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/auto-complete endpoint(data->rows->propertyId)
+            - At /auto-complete endpoint: Note that the propertyId only appears when the location is an address
+            - Ex: `29171311`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/details:
+    get:
+      summary: "properties/details"
+      tags:
+        - Property details
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "/WA/Camas/3636-NW-24th-Cir-98607/home/18426094"
+          description: |
+            - Required: true
+            - The `url` can be retrieved from below endpoint(data->homeData->url)
+            - /properties/search-sale
+            - /properties/search-rent
+            - /properties/search-sold
+            - /properties/search-by-url (data->homes->url)
+            - Ex: `/WA/Camas/3636-NW-24th-Cir-98607/home/18426094`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/detail-by-url:
+    get:
+      summary: "properties/detail-by-url"
+      tags:
+        - Property details
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.redfin.com/CT/New-Haven/Pierpont/apartment/176060870"
+          description: |
+            - URL to get detail
+            - Required: true
+            - Ex: `https://www.redfin.com/CT/New-Haven/Pierpont/apartment/176060870`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/main-info:
+    get:
+      summary: "properties/main-info"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/extra-info:
+    get:
+      summary: "properties/extra-info"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/walk-score:
+    get:
+      summary: "properties/walk-score"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/amenities:
+    get:
+      summary: "properties/amenities"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/get-agent:
+    get:
+      summary: "properties/get-agent"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/mortgage-calculator:
+    get:
+      summary: "properties/mortgage-calculator"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/estimate:
+    get:
+      summary: "properties/estimate"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/tour-insights:
+    get:
+      summary: "properties/tour-insights"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/popularity-info:
+    get:
+      summary: "properties/popularity-info"
+      tags:
+        - Property details
+      parameters:
+        - name: listingId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/parcel-bounds:
+    get:
+      summary: "properties/parcel-bounds"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/coordinates:
+    get:
+      summary: "properties/coordinates"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/flood-info:
+    get:
+      summary: "properties/flood-info"
+      tags:
+        - Property details
+      parameters:
+        - name: fipsCode
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "53011"
+          description: |
+            - Required: true
+            - `fipsCode` can be retrieved from /properties/parcel-bounds endpoint(data->fipsCode)
+            - Ex: `53011`
+        - name: apn
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "011-986056496"
+          description: |
+            - Required: true
+            - `apn` can be retrieved from /properties/parcel-bounds endpoint(data->apn)
+            - Ex: `011-986056496`
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "45.681162"
+          description: |
+            - The latitude of GEO location
+            - Required: true
+            - `lat` can be retrieved from /properties/coordinates endpoint(data->lat)
+            - Ex: `45.681162`
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "-122.314572"
+          description: |
+            - The longitude of GEO location
+            - Required: true
+            - `lng` can be retrieved from /properties/coordinates endpoint(data->lng)
+            - Ex: `-122.314572`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/date-picker-data:
+    get:
+      summary: "properties/date-picker-data"
+      tags:
+        - Property details
+      parameters:
+        - name: listingId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/customer-conversion-info:
+    get:
+      summary: "properties/customer-conversion-info"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/price-drop-info:
+    get:
+      summary: "properties/price-drop-info"
+      tags:
+        - Property details
+      parameters:
+        - name: listingId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "183460396"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `183460396`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/hot-market-info:
+    get:
+      summary: "properties/hot-market-info"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /properties/main-house-info-panel-info:
+    get:
+      summary: "properties/main-house-info-panel-info"
+      tags:
+        - Property details
+      parameters:
+        - name: propertyId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "174441610"
+          description: |
+            - Required: true
+            - `propertyId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->propertyId)
+        - name: listingId
+          in: query
+          schema:
+            type: string
+            example: "138238059"
+          description: |
+            - Required: true
+            - `listingId` can be retrieved from /properties/search-sale or /properties/search-rent or /properties/search-sold endpoint(data->homeData->listingId)
+            - Ex: `138238059`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /property/auto-complete:
+    get:
+      summary: "property/auto-complete"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "New"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /property/search:
+    get:
+      summary: "property/search"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Austin"
+          description: |
+            -  Address or zip code
+            - `location` can be retrieved from /property/auto-complete endpoint(data->sections->rows->name)
+        - name: sub_location
+          in: query
+          schema:
+            type: string
+          description: |
+            - `sub_location` can be retrieved from /property/auto-complete endpoint(data->sections->rows->subName)
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: search_by
+          in: query
+          schema:
+            type: string
+            example: "places"
+          description: |
+            - Choose one of the values below
+            - `places`
+            - `schools`
+            - `agents`
+            - `buildings`
+            - `addresses`
+            - Default: `places`
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: |
+            - Choose one of the values below
+            - `Recommended`
+            - `Newest`
+            - `PriceLowToHigh`
+            - `PriceHighToLow`
+            - `SquareFeet`
+            - `LotSize`
+            - `PriceSqft`
+        - name: search_type
+          in: query
+          schema:
+            type: string
+            default: "ForSale"
+          description: |
+            - Choose one of the values below
+            - `Sold`
+            - `ForSale`
+            - Default: `ForSale`
+        - name: sold_within
+          in: query
+          schema:
+            type: string
+            default: "Last-3Months"
+          description: |
+            - This option only has an available when `search_type=Sold`
+            - Choose  one of the values below
+            - `Last-1Week`
+            - `Last-1Month`
+            - `Last-3Months`
+            - `Last-6Months`
+            - `Last-1Year`
+            - `Last-2Years`
+            - `Last-3Years`
+            - `Last-5Years`
+            - Default:`Last-3Months`
+        - name: min_price
+          in: query
+          schema:
+            type: number
+        - name: max_price
+          in: query
+          schema:
+            type: number
+        - name: home_type
+          in: query
+          schema:
+            type: string
+            example: "House,Townhouse"
+          description: |
+            - Property type comma-separated or empty for all types:
+            - House
+            - Townhouse
+            - Condo
+            - Land
+            - MultiFamily
+            - Mobile
+            - Co-op
+            - Other
+            - Ex: House,Townhouse
+        - name: min_bedroom
+          in: query
+          schema:
+            type: number
+        - name: max_bedroom
+          in: query
+          schema:
+            type: number
+        - name: min_bathroom
+          in: query
+          schema:
+            type: number
+        - name: status
+          in: query
+          schema:
+            type: string
+            default: "9"
+          description: |
+            - Status
+            - Ex: `9`
+            - Default: `9`
+            - Choose one of the values below
+            - `ComingSoon`: Coming soon
+            - `Active`: Active
+            - `0`: Coming soon
+            - `1`: Active
+            - `130`: Under contract/pending
+            - `9`: Coming soon + Active
+            - `8`: Coming soon + Under contract/pending
+            - `131`: Active + Under contract/pending
+            - `139`: Coming soon + Active + Under contract/pending
+        - name: time_on_redfin
+          in: query
+          schema:
+            type: string
+            example: "NewListings"
+          description: |
+            - Choose one of the values below
+            - `NewListings`
+            - `LessThan3Days`
+            - `LessThan7Days`
+            - `LessThan14Days`
+            - `LessThan30Days`
+            - `MoreThan7Days`
+            - `MoreThan14Days`
+            - `MoreThan30Days`
+            - `MoreThan45Days`
+            - `MoreThan60Days`
+            - `MoreThan90Days`
+            - `MoreThan180Days`
+        - name: min_square_feet
+          in: query
+          schema:
+            type: number
+        - name: max_square_feet
+          in: query
+          schema:
+            type: number
+        - name: min_lot_size
+          in: query
+          schema:
+            type: number
+        - name: max_lot_size
+          in: query
+          schema:
+            type: number
+        - name: min_stories
+          in: query
+          schema:
+            type: number
+        - name: max_stories
+          in: query
+          schema:
+            type: number
+        - name: min_year_built
+          in: query
+          schema:
+            type: number
+        - name: max_year_built
+          in: query
+          schema:
+            type: number
+        - name: has_exclude_55_communities
+          in: query
+          schema:
+            type: boolean
+        - name: garage_spots
+          in: query
+          schema:
+            type: number
+        - name: pool_type
+          in: query
+          schema:
+            type: string
+            example: "PrivatePool"
+          description: |
+            - Choose one of the values below
+            - `PrivatePool`
+            - `CommunityPool`
+            - `PrivateOrCommunityPool`
+            - `NoPrivatePool`
+        - name: has_include_outdoor_parking
+          in: query
+          schema:
+            type: boolean
+        - name: has_air_conditioning
+          in: query
+          schema:
+            type: boolean
+        - name: has_waterfront
+          in: query
+          schema:
+            type: boolean
+        - name: has_view
+          in: query
+          schema:
+            type: boolean
+        - name: has_fireplace
+          in: query
+          schema:
+            type: boolean
+        - name: has_fixer_upper
+          in: query
+          schema:
+            type: boolean
+        - name: has_guest_house
+          in: query
+          schema:
+            type: boolean
+        - name: has_elevator
+          in: query
+          schema:
+            type: boolean
+        - name: has_basement
+          in: query
+          schema:
+            type: boolean
+        - name: has_washer_dryer_hookup
+          in: query
+          schema:
+            type: boolean
+        - name: has_pets_allowed
+          in: query
+          schema:
+            type: boolean
+        - name: has_primary_bedroom_on_main_floor
+          in: query
+          schema:
+            type: boolean
+        - name: has_rv_parking
+          in: query
+          schema:
+            type: boolean
+        - name: has_green_home
+          in: query
+          schema:
+            type: boolean
+        - name: has_accessible_home
+          in: query
+          schema:
+            type: boolean
+        - name: keyword_search
+          in: query
+          schema:
+            type: string
+        - name: listing_type
+          in: query
+          schema:
+            type: string
+            example: "ByAgent,ByOwner"
+          description: |
+            - Multiple values can be entered and comma-separated
+            - Ex: ByAgent,ByOwner
+            - `ByAgent`: By agent
+            - `ByOwner`: By owner (FSBO)
+            - `NewConstruction`: New construction
+            - `Foreclosures`: Foreclosures
+
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /property/search-rent:
+    get:
+      summary: "property/search-rent"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Franklin"
+          description: |
+            -  Address or zip code
+            - `location` can be retrieved from /property/auto-complete endpoint(data->sections->rows->name)
+        - name: sub_location
+          in: query
+          schema:
+            type: string
+          description: |
+            - `sub_location` can be retrieved from /property/auto-complete endpoint(data->sections->rows->subName)
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: search_by
+          in: query
+          schema:
+            type: string
+            example: "places"
+          description: |
+            Choose one of the values below
+            - `places`
+            - `schools`
+            - `agents`
+            - `buildings`
+            - `addresses`
+            - Default: `places`
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: |
+            - Choose one of the values below
+            - `Recommended`
+            - `Newest`
+            - `PriceLowToHigh`
+            - `PriceHighToLow`
+            - `SquareFeet`
+            - `LotSize`
+            - `PriceSqft`
+        - name: sold_within
+          in: query
+          schema:
+            type: string
+            default: "Last-3Months"
+          description: |
+            - This option only has an available when `search_type=Sold`
+            - Choose  one of the values below
+            - `Last-1Week`
+            - `Last-1Month`
+            - `Last-3Months`
+            - `Last-6Months`
+            - `Last-1Year`
+            - `Last-2Years`
+            - `Last-3Years`
+            - `Last-5Years`
+            - Default:`Last-3Months`
+        - name: min_price
+          in: query
+          schema:
+            type: number
+        - name: max_price
+          in: query
+          schema:
+            type: number
+        - name: home_type
+          in: query
+          schema:
+            type: string
+            example: "House,Townhouse"
+          description: |
+            - Property type comma-separated or empty for all types:
+            - House
+            - Townhouse
+            - Condo
+            - Land
+            - MultiFamily
+            - Mobile
+            - Co-op
+            - Other
+            - Ex: House,Townhouse
+        - name: min_bedroom
+          in: query
+          schema:
+            type: number
+        - name: max_bedroom
+          in: query
+          schema:
+            type: number
+        - name: min_bathroom
+          in: query
+          schema:
+            type: number
+        - name: status
+          in: query
+          schema:
+            type: string
+            default: "9"
+          description: |
+            - Status
+            - Ex: `9`
+            - Default: `9`
+            - Choose one of the values below
+            - `ComingSoon`: Coming soon
+            - `Active`: Active
+            - `0`: Coming soon
+            - `1`: Active
+            - `130`: Under contract/pending
+            - `9`: Coming soon + Active
+            - `8`: Coming soon + Under contract/pending
+            - `131`: Active + Under contract/pending
+            - `139`: Coming soon + Active + Under contract/pending
+        - name: move_in_date
+          in: query
+          schema:
+            type: string
+            example: "2025-01-25"
+        - name: min_square_feet
+          in: query
+          schema:
+            type: number
+        - name: max_square_feet
+          in: query
+          schema:
+            type: number
+        - name: min_lot_size
+          in: query
+          schema:
+            type: number
+        - name: max_lot_size
+          in: query
+          schema:
+            type: number
+        - name: min_stories
+          in: query
+          schema:
+            type: number
+        - name: max_stories
+          in: query
+          schema:
+            type: number
+        - name: min_year_built
+          in: query
+          schema:
+            type: number
+        - name: max_year_built
+          in: query
+          schema:
+            type: number
+        - name: has_exclude_55_communities
+          in: query
+          schema:
+            type: boolean
+        - name: garage_spots
+          in: query
+          schema:
+            type: number
+        - name: pool_type
+          in: query
+          schema:
+            type: string
+            example: "PrivatePool"
+          description: |
+            - Choose one of the values below
+            - `PrivatePool`
+            - `CommunityPool`
+            - `PrivateOrCommunityPool`
+            - `NoPrivatePool`
+        - name: has_include_outdoor_parking
+          in: query
+          schema:
+            type: boolean
+        - name: has_air_conditioning
+          in: query
+          schema:
+            type: boolean
+        - name: has_waterfront
+          in: query
+          schema:
+            type: boolean
+        - name: has_view
+          in: query
+          schema:
+            type: boolean
+        - name: has_fireplace
+          in: query
+          schema:
+            type: boolean
+        - name: has_fixer_upper
+          in: query
+          schema:
+            type: boolean
+        - name: has_guest_house
+          in: query
+          schema:
+            type: boolean
+        - name: has_elevator
+          in: query
+          schema:
+            type: boolean
+        - name: has_basement
+          in: query
+          schema:
+            type: boolean
+        - name: has_washer_dryer_hookup
+          in: query
+          schema:
+            type: boolean
+        - name: has_pets_allowed
+          in: query
+          schema:
+            type: boolean
+        - name: has_primary_bedroom_on_main_floor
+          in: query
+          schema:
+            type: boolean
+        - name: has_rv_parking
+          in: query
+          schema:
+            type: boolean
+        - name: has_green_home
+          in: query
+          schema:
+            type: boolean
+        - name: has_accessible_home
+          in: query
+          schema:
+            type: boolean
+        - name: keyword_search
+          in: query
+          schema:
+            type: string
+        - name: listing_type
+          in: query
+          schema:
+            type: string
+            example: "ByAgent,ByOwner"
+          description: |
+            - Multiple values can be entered and comma-separated
+            - Ex: ByAgent,ByOwner
+            - `ByAgent`: By agent
+            - `ByOwner`: By owner (FSBO)
+            - `NewConstruction`: New construction
+            - `Foreclosures`: Foreclosures
+
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /property/search-v2:
+    get:
+      summary: "property/search-v2"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: locationId
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "eyJpIjogIjJfMzA4MTgiLCAidCI6ICJQbGFjZXMiLCAidSI6ICIvY2l0eS8zMDgxOC9UWC9BdXN0aW4ifQ=="
+          description: |
+            -  Address or zip code
+            - `locationId` can be retrieved from /property/auto-complete endpoint(data->sections->rows->idV2)
+            - Ex: `eyJpIjogIjJfMzA4MTgiLCAidCI6ICJQbGFjZXMiLCAidSI6ICIvY2l0eS8zMDgxOC9UWC9BdXN0aW4ifQ==`
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: search_by
+          in: query
+          schema:
+            type: string
+            example: "places"
+          description: |
+            - Choose one of the values below
+            - `places`
+            - `schools`
+            - `agents`
+            - `buildings`
+            - `addresses`
+            - Default: `places`
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: |
+            - Choose one of the values below
+            - `Recommended`
+            - `Newest`
+            - `PriceLowToHigh`
+            - `PriceHighToLow`
+            - `SquareFeet`
+            - `LotSize`
+            - `PriceSqft`
+        - name: search_type
+          in: query
+          schema:
+            type: string
+            default: "ForSale"
+          description: |
+            - Choose one of the values below
+            - `Sold`
+            - `ForSale`
+            - Default: `ForSale`
+        - name: sold_within
+          in: query
+          schema:
+            type: string
+            default: "Last-3Months"
+          description: |
+            - This option only has an available when `search_type=Sold`
+            - Choose  one of the values below
+            - `Last-1Week`
+            - `Last-1Month`
+            - `Last-3Months`
+            - `Last-6Months`
+            - `Last-1Year`
+            - `Last-2Years`
+            - `Last-3Years`
+            - `Last-5Years`
+            - Default:`Last-3Months`
+        - name: min_price
+          in: query
+          schema:
+            type: number
+        - name: max_price
+          in: query
+          schema:
+            type: number
+        - name: home_type
+          in: query
+          schema:
+            type: string
+            example: "House,Townhouse"
+          description: |
+            - Property type comma-separated or empty for all types:
+            - House
+            - Townhouse
+            - Condo
+            - Land
+            - MultiFamily
+            - Mobile
+            - Co-op
+            - Other
+            - Ex: House,Townhouse
+        - name: min_bedroom
+          in: query
+          schema:
+            type: number
+        - name: max_bedroom
+          in: query
+          schema:
+            type: number
+        - name: min_bathroom
+          in: query
+          schema:
+            type: number
+        - name: status
+          in: query
+          schema:
+            type: string
+            default: "9"
+          description: |
+            - Status
+            - Ex: `9`
+            - Default: `9`
+            - Choose one of the values below
+            - `ComingSoon`: Coming soon
+            - `Active`: Active
+            - `0`: Coming soon
+            - `1`: Active
+            - `130`: Under contract/pending
+            - `9`: Coming soon + Active
+            - `8`: Coming soon + Under contract/pending
+            - `131`: Active + Under contract/pending
+            - `139`: Coming soon + Active + Under contract/pending
+        - name: time_on_redfin
+          in: query
+          schema:
+            type: string
+            example: "NewListings"
+          description: |
+            - Choose one of the values below
+            - `NewListings`
+            - `LessThan3Days`
+            - `LessThan7Days`
+            - `LessThan14Days`
+            - `LessThan30Days`
+            - `MoreThan7Days`
+            - `MoreThan14Days`
+            - `MoreThan30Days`
+            - `MoreThan45Days`
+            - `MoreThan60Days`
+            - `MoreThan90Days`
+            - `MoreThan180Days`
+        - name: min_square_feet
+          in: query
+          schema:
+            type: number
+        - name: max_square_feet
+          in: query
+          schema:
+            type: number
+        - name: min_lot_size
+          in: query
+          schema:
+            type: number
+        - name: max_lot_size
+          in: query
+          schema:
+            type: number
+        - name: min_stories
+          in: query
+          schema:
+            type: number
+        - name: max_stories
+          in: query
+          schema:
+            type: number
+        - name: min_year_built
+          in: query
+          schema:
+            type: number
+        - name: max_year_built
+          in: query
+          schema:
+            type: number
+        - name: has_exclude_55_communities
+          in: query
+          schema:
+            type: boolean
+        - name: garage_spots
+          in: query
+          schema:
+            type: number
+        - name: pool_type
+          in: query
+          schema:
+            type: string
+            example: "PrivatePool"
+          description: |
+            - Choose one of the values below
+            - `PrivatePool`
+            - `CommunityPool`
+            - `PrivateOrCommunityPool`
+            - `NoPrivatePool`
+        - name: has_include_outdoor_parking
+          in: query
+          schema:
+            type: boolean
+        - name: has_air_conditioning
+          in: query
+          schema:
+            type: boolean
+        - name: has_waterfront
+          in: query
+          schema:
+            type: boolean
+        - name: has_view
+          in: query
+          schema:
+            type: boolean
+        - name: has_fireplace
+          in: query
+          schema:
+            type: boolean
+        - name: has_fixer_upper
+          in: query
+          schema:
+            type: boolean
+        - name: has_guest_house
+          in: query
+          schema:
+            type: boolean
+        - name: has_elevator
+          in: query
+          schema:
+            type: boolean
+        - name: has_basement
+          in: query
+          schema:
+            type: boolean
+        - name: has_washer_dryer_hookup
+          in: query
+          schema:
+            type: boolean
+        - name: has_pets_allowed
+          in: query
+          schema:
+            type: boolean
+        - name: has_primary_bedroom_on_main_floor
+          in: query
+          schema:
+            type: boolean
+        - name: has_rv_parking
+          in: query
+          schema:
+            type: boolean
+        - name: has_green_home
+          in: query
+          schema:
+            type: boolean
+        - name: has_accessible_home
+          in: query
+          schema:
+            type: boolean
+        - name: keyword_search
+          in: query
+          schema:
+            type: string
+        - name: listing_type
+          in: query
+          schema:
+            type: string
+            example: "ByAgent,ByOwner"
+          description: |
+            - Multiple values can be entered and comma-separated
+            - Ex: ByAgent,ByOwner
+            - `ByAgent`: By agent
+            - `ByOwner`: By owner (FSBO)
+            - `NewConstruction`: New construction
+            - `Foreclosures`: Foreclosures
+
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /property/search-url:
+    get:
+      summary: "property/search-url"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.redfin.com/city/30749/NY/New-York"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /property/detail:
+    get:
+      summary: "property/detail"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "/NY/Jamaica/9452-199th-St-11423/home/20743109"
+          description: |
+            - **1. The value of the url in  the  /Search endpoint**
+            - Ex: /NY/Jamaica/9452-199th-St-11423/home/20743109
+            - **2. Or copy the URL from the browser**
+            - Ex: https://www.redfin.com/NY/Jamaica/9452-199th-St-11423/home/20743109
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /property/detail-photos:
+    get:
+      summary: "property/detail-photos"
+      tags:
+        - Property (version 2)
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.redfin.com/NY/Bronx/60-Knolls-Cres-10463/unit-3A/home/189465724"
+          description: |
+            - **1. The value of the url in  the  /Search endpoint**
+            - Ex: /NY/Jamaica/9452-199th-St-11423/home/20743109
+            - **2. Or copy the URL from the browser**
+            - Ex: https://www.redfin.com/NY/Jamaica/9452-199th-St-11423/home/20743109
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /agents/auto-complete:
+    get:
+      summary: "agents/auto-complete"
+      tags:
+        - Agents
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "ch"
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /agents/search:
+    get:
+      summary: "agents/search"
+      tags:
+        - Agents
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "T B Agents"
+          description: |
+            - `location` can be retrieved from /agents/auto-complete (data->name)
+        - name: sub_location
+          in: query
+          schema:
+            type: string
+            example: "T B, MD, USA"
+          description: |
+            - `sub_location` can be retrieved from /agents/auto-complete (data->subName)
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+  /agents/detail:
+    get:
+      summary: "agents/detail"
+      tags:
+        - Agents
+      parameters:
+        - name: profile_url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "/real-estate-agents/mandy-kaur"
+          description: |
+            - `profileUrl` from **agents/search** endpoint
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Key
+security:
+  - X-API-Key: []
+tags:
+  - name: Property search
+  - name: Property details
+  - name: Property (version 2)
+  - name: Agents
