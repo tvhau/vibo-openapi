@@ -58,7 +58,7 @@ paths:
 
       parameters:
 
-        - name: regionId
+        - name: query
           in: query
           required: true
           schema:
