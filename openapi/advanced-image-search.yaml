@@ -13,8 +13,6 @@ paths:
   /languages:
     get:
       summary: "Get languages"
-      tags:
-        - Languages search
       parameters:
         - name: name
           in: query
@@ -36,8 +34,6 @@ paths:
   /regions:
     get:
       summary: "Get regions"
-      tags:
-        - Regions search
       parameters:
         - name: name
           in: query
@@ -59,8 +55,6 @@ paths:
   /images/search:
     get:
       summary: "Search images"
-      tags:
-        - Images search
 
       parameters:
 
@@ -248,11 +242,3 @@ components:
 
 security:
   - X-API-Key: []
-
-tags:
-  - name: Languages search
-    description: Language-related operations
-  - name: Regions search
-    description: Region-related operations
-  - name: Images search
-    description: Image search operations
