@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: "Zillow API Documentation"
-  description: "Real-time data, unofficial zillow.com API, realty in US, search for-sale and rental listings. unofficial API real-time data from zillow.com API provide information on buying, selling, renting such as homes, apartments, and condos."
+  title: "Booking API Documentation"
+  description: "Real-time Booking.com data – Unofficial API for listings worldwide Get real-time data from Booking.com, a leading and widely used online platform for booking hotels, vacation rentals, apartments, and other accommodations. This unofficial API provides access to Booking listings, prices, availability, and more — helping you find a great place to stay at an amazing price.  All data is collected from publicly available content and Perfect for building sites like ,Hotels.com, Booking.com, or Agoda.com."
   version: 1.0.0
 servers:
   - url: http://localhost:8080/booking
