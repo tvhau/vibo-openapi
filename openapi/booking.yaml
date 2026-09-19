@@ -45,7 +45,7 @@ paths:
               schema:
                 type: object
 
-  /booking/languages:
+  /languages:
     get:
       summary: "languages"
       tags:
@@ -156,7 +156,7 @@ paths:
     get:
       summary: "flights/search-minprice-roundtrip"
       tags:
-        - Stays
+        - Flights
 
       parameters:
         - name: query
