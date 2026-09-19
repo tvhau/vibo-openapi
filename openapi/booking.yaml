@@ -102,6 +102,7 @@ paths:
       summary: "flights/search-roundtrip"
       tags:
         - Flights
+
       parameters:
         - name: leavingFrom
           in: query
