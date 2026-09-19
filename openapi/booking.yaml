@@ -17,7 +17,7 @@ info:
     All data is collected from publicly available content.
 
 servers:
-  - url: http://localhost:8080/booking
+  - url: https://api.viboapi.com
 
 paths:
 
