@@ -134,9 +134,140 @@ paths:
             format: date
           description: |
             Departure date.
-
             - Format: `YYYY-MM-DD`
             - If not provided, the API uses the current date plus one day.
+            - Example: `2024-05-25`
+        - name: returnDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: |
+            Departure date.
+            - Format: `YYYY-MM-DD`
+            - Default is departureDate plus five days
+            - Example: `2024-10-25`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 1
+          description: |
+            - The page index, for paging purpose
+             - Ex: `2`
+             - Default: `1`
+        - name: cabinClass
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Default: `ECONOMY`
+            Select one of the values below:
+              - `ECONOMY`: Economy
+              - `PREMIUM_ECONOMY`: Premium economy
+              - `BUSINESS`: Business
+              - `FIRST`: First
+        - name: children
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Age range: 2-17 years old  
+            Multiple integer values can be entered, separated by commas.
+            Example: 2, 6
+        - name: stops
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Select one of the values below:  
+            - `1`: Max 1 stop per flight
+            - `2`: Max 2 stops per flight
+            - `3`: Max 3 stops per flight
+            - `4`: Max 4 stops per flight
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Default: `BEST`
+            Select one of the values below:
+              - `BEST`: Best
+              - `CHEAPEST`: Cheapest
+              - `FASTEST`: Fastest
+        - name: languageCode
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            The value of  **languageCode**  can be retrieved from `/languages` endpoint(data->code)
+        - name: airlines
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            The value of  `airlines`   can be retrieved from this endpoint(**data->aggregation->airlines->iataCode**)
+              
+            You can enter multiple values, separated by commas (`,`)
+            - `ET`: Ethiopian Airlines
+            - `HF`: Air Cote D'Ivoire
+            - `MS`: Egyptair
+            - `AT`: Royal Air Maroc
+                 ....
+        - name: duration
+          in: query
+          required: false
+          schema:
+            type: number
+          description: |
+            ""
+        - name: directFlightsOnly
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: |
+            Default: `false`
+        - name: departingFlightDepartureTime
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            You can enter multiple values, separated by commas (`,`)
+            Example: `00:00-05:59,06:00-11:59`
+        - name: departingFlightArrivalTime
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            You can enter multiple values, separated by commas (`,`)
+            Example: `00:00-05:59,18:00-23:59`
+        - name: returnFlightDepartureTime
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            You can enter multiple values, separated by commas (`,`)
+            Example: `00:00-05:59,06:00-11:59`
+        - name: returnFlightArrivalTime
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            You can enter multiple values, separated by commas (`,`)
+            Example: `00:00-05:59,18:00-23:59`
 
       responses:
         "200":
