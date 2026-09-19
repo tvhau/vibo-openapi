@@ -21,9 +21,9 @@ servers:
 
 paths:
 
-  /currencies:
+  /booking/currency:
     get:
-      summary: "Get currencies"
+      summary: "currencies"
       tags:
         - General
       parameters:
@@ -34,7 +34,7 @@ paths:
             type: string
             example: "USD"
           description: |
-            Optional currency name or code.
+            Optional currencies name or code.
             Example: `USD`
 
       responses:
@@ -45,9 +45,9 @@ paths:
               schema:
                 type: object
 
-  /regions:
+  /booking/languages:
     get:
-      summary: "Get regions"
+      summary: "languages"
       tags:
         - General
       parameters:
@@ -58,7 +58,7 @@ paths:
             type: string
             example: "United States"
           description: |
-            Optional region name.
+            Optional languages name.
             Example: `United States`
 
       responses:
@@ -69,9 +69,9 @@ paths:
               schema:
                 type: object
 
-  /flights/auto-complete:
+  /booking-app/flights/auto-complete:
     get:
-      summary: "Flight autocomplete"
+      summary: "flights/auto-complete"
       tags:
         - Flights
 
@@ -152,9 +152,9 @@ paths:
               schema:
                 type: object
 
-  /stays/autocomplete:
+  /booking-app/flights/search-minprice-roundtrip:
     get:
-      summary: "Stays autocomplete"
+      summary: "flights/search-minprice-roundtrip"
       tags:
         - Stays
 
@@ -180,7 +180,6 @@ paths:
                 type: object
 
 components:
-
   securitySchemes:
 
     X-API-Key:
