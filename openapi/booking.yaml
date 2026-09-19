@@ -24,6 +24,8 @@ paths:
   /currencies:
     get:
       summary: "Get currencies"
+      tags:
+        - General
       parameters:
         - name: name
           in: query
@@ -46,6 +48,8 @@ paths:
   /regions:
     get:
       summary: "Get regions"
+      tags:
+        - General
       parameters:
         - name: name
           in: query
@@ -134,7 +138,6 @@ paths:
           schema:
             type: string
             format: date
-            example: "2026-09-20"
           description: |
             Departure date.
 
@@ -190,9 +193,9 @@ security:
   - X-API-Key: []
 
 tags:
-
   - name: Flights
     description: Flight-related endpoints
-
   - name: Stays
     description: Accommodation-related endpoints
+  - name: General
+    description: General endpoints
