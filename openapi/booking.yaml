@@ -1,24 +1,40 @@
 openapi: 3.0.0
+
 info:
   title: "Booking API Documentation"
-  description: "Real-time Booking.com data – Unofficial API for listings worldwide Get real-time data from Booking.com, a leading and widely used online platform for booking hotels, vacation rentals, apartments, and other accommodations. This unofficial API provides access to Booking listings, prices, availability, and more — helping you find a great place to stay at an amazing price.  All data is collected from publicly available content and Perfect for building sites like ,Hotels.com, Booking.com, or Agoda.com."
-  version: 1.0.0
+  version: "1.0.0"
+  description: |
+    Real-time Booking.com data – Unofficial API for listings worldwide.
+
+    Get real-time data from Booking.com, a leading and widely used online
+    platform for booking hotels, vacation rentals, apartments, and other
+    accommodations.
+
+    This unofficial API provides access to Booking listings, prices,
+    availability, and more — helping you find a great place to stay at
+    an amazing price.
+
+    All data is collected from publicly available content.
+
 servers:
   - url: http://localhost:8080/booking
+
 paths:
+
   /currencies:
     get:
-      summary: "currencies"
+      summary: "Get currencies"
       parameters:
         - name: name
           in: query
           required: false
           schema:
             type: string
-            example: "Afrikaans"
+            example: "USD"
           description: |
-            Optional currencies name.
-            Example: `Afrikaans`
+            Optional currency name or code.
+            Example: `USD`
+
       responses:
         "200":
           description: Successful Response
@@ -29,17 +45,18 @@ paths:
 
   /regions:
     get:
-      summary: "languages"
+      summary: "Get regions"
       parameters:
         - name: name
           in: query
           required: false
           schema:
             type: string
-            example: "Deutsch"
+            example: "United States"
           description: |
-            Optional languages name.
-            Example: `Deutsch`
+            Optional region name.
+            Example: `United States`
+
       responses:
         "200":
           description: Successful Response
@@ -50,9 +67,10 @@ paths:
 
   /flights/auto-complete:
     get:
-      summary: "flights/auto-complete"
+      summary: "Flight autocomplete"
       tags:
         - Flights
+
       parameters:
         - name: query
           in: query
@@ -61,8 +79,11 @@ paths:
             type: string
             example: "new"
           description: |
+            Search for an airport, city, or other flight location.
+
             - Required: true
-            - Ex: `new`
+            - Example: `new`
+
       responses:
         "200":
           description: Successful Response
@@ -73,10 +94,12 @@ paths:
 
   /flights/search-roundtrip:
     get:
-      summary: "flights/search-roundtrip"
+      summary: "Search round-trip flights"
       tags:
         - Flights
+
       parameters:
+
         - name: leavingFrom
           in: query
           required: true
@@ -84,9 +107,13 @@ paths:
             type: string
             example: "JFK"
           description: |
+            Departure airport code.
+
             - Required: true
-            - The value of leavingFrom can be retrieved from the /flights/auto-complete endpoint (field data.code) where type is AIRPORT.
-            - Ex: `JFK`
+            - The value can be retrieved from the `/flights/auto-complete`
+              endpoint using the `data.code` field where `type` is `AIRPORT`.
+            - Example: `JFK`
+
         - name: goingTo
           in: query
           required: true
@@ -94,33 +121,26 @@ paths:
             type: string
             example: "LOS"
           description: |
+            Destination airport code.
+
             - Required: true
-            - The value of leavingFrom can be retrieved from the /flights/auto-complete endpoint (field data.code) where type is AIRPORT.
-            - Ex: `LOS`
+            - The value can be retrieved from the `/flights/auto-complete`
+              endpoint using the `data.code` field where `type` is `AIRPORT`.
+            - Example: `LOS`
+
         - name: departureDate
           in: query
-          schema:
-            type: Date
-            default: 10
-          description: |
-            - Format: YYYY-MM-DD
-            - Default is the current date plus one day
-
-  /stays/autocomplete:
-    get:
-      summary: "stays/autocomplete"
-      tags:
-        - Stays
-      parameters:
-        - name: query
-          in: query
-          required: true
+          required: false
           schema:
             type: string
-            example: "new"
+            format: date
+            example: "2026-09-20"
           description: |
-            - Required: true
-            - Ex: `new`
+            Departure date.
+
+            - Format: `YYYY-MM-DD`
+            - If not provided, the API uses the current date plus one day.
+
       responses:
         "200":
           description: Successful Response
@@ -129,16 +149,50 @@ paths:
               schema:
                 type: object
 
+  /stays/autocomplete:
+    get:
+      summary: "Stays autocomplete"
+      tags:
+        - Stays
+
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "new"
+          description: |
+            Search for a hotel, city, region, or accommodation.
+
+            - Required: true
+            - Example: `new`
+
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
 
 components:
+
   securitySchemes:
+
     X-API-Key:
       type: apiKey
       in: header
       name: x-api-key
       description: API Key
+
 security:
   - X-API-Key: []
+
 tags:
+
   - name: Flights
+    description: Flight-related endpoints
+
   - name: Stays
+    description: Accommodation-related endpoints
