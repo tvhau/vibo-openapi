@@ -17,7 +17,7 @@ info:
     All data is collected from publicly available content.
 
 servers:
-  - url: https://api.viboapi.com
+  - url: https://api.viboapi.com/booking
 
 paths:
 
