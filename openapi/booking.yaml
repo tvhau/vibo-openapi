@@ -1,0 +1,144 @@
+openapi: 3.0.0
+info:
+  title: "Zillow API Documentation"
+  description: "Real-time data, unofficial zillow.com API, realty in US, search for-sale and rental listings. unofficial API real-time data from zillow.com API provide information on buying, selling, renting such as homes, apartments, and condos."
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/booking
+paths:
+  /currencies:
+    get:
+      summary: "currencies"
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Afrikaans"
+          description: |
+            Optional currencies name.
+            Example: `Afrikaans`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /regions:
+    get:
+      summary: "languages"
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Deutsch"
+          description: |
+            Optional languages name.
+            Example: `Deutsch`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /flights/auto-complete:
+    get:
+      summary: "flights/auto-complete"
+      tags:
+        - Flights
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "new"
+          description: |
+            - Required: true
+            - Ex: `new`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /flights/search-roundtrip:
+    get:
+      summary: "flights/search-roundtrip"
+      tags:
+        - Flights
+      parameters:
+        - name: leavingFrom
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "JFK"
+          description: |
+            - Required: true
+            - The value of leavingFrom can be retrieved from the /flights/auto-complete endpoint (field data.code) where type is AIRPORT.
+            - Ex: `JFK`
+        - name: goingTo
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "LOS"
+          description: |
+            - Required: true
+            - The value of leavingFrom can be retrieved from the /flights/auto-complete endpoint (field data.code) where type is AIRPORT.
+            - Ex: `LOS`
+        - name: departureDate
+          in: query
+          schema:
+            type: Date
+            default: 10
+          description: |
+            - Format: YYYY-MM-DD
+            - Default is the current date plus one day
+
+  /stays/autocomplete:
+    get:
+      summary: "stays/autocomplete"
+      tags:
+        - Stays
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "new"
+          description: |
+            - Required: true
+            - Ex: `new`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+components:
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Key
+security:
+  - X-API-Key: []
+tags:
+  - name: Flights
+  - name: Stays
