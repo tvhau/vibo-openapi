@@ -192,9 +192,9 @@ security:
   - X-API-Key: []
 
 tags:
+  - name: General
+  - description: General endpoints
   - name: Flights
     description: Flight-related endpoints
   - name: Stays
     description: Accommodation-related endpoints
-  - name: General
-    description: General endpoints
