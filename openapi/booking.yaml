@@ -45,7 +45,7 @@ paths:
               schema:
                 type: object
 
-  /languages:
+  /booking/languages:
     get:
       summary: "languages"
       tags:
