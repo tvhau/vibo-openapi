@@ -20,6 +20,7 @@ paths:
 
   /booking/currency:
     get:
+      operationId: generalCurrencies
       summary: "currencies"
       tags:
         - General
@@ -44,6 +45,7 @@ paths:
 
   /booking/languages:
     get:
+      operationId: generalLanguages
       summary: "languages"
       tags:
         - General
@@ -68,6 +70,7 @@ paths:
 
   /booking-app/flights/auto-complete:
     get:
+      operationId: flightsAutocomplete
       summary: "flights/auto-complete"
       tags:
         - Flights
@@ -95,6 +98,7 @@ paths:
 
   /booking-app/flights/search-roundtrip:
     get:
+      operationId: flightsSearchRoundtrip
       summary: "flights/search-roundtrip"
       tags:
         - Flights
@@ -279,6 +283,7 @@ paths:
 
   /booking-app/flights/search-minprice-roundtrip:
     get:
+      operationId: flightsSearchMinpriceRoundtrip
       summary: "flights/search-minprice-roundtrip"
       tags:
         - Flights
